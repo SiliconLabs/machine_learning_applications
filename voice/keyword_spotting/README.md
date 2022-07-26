@@ -4,7 +4,19 @@ Two neural network models for keyword spotting are provided here: `keyword_spott
 
 ## Reproducing the models
 
+### Prerequisites
+
 The [MLTK](https://siliconlabs.github.io/mltk/index.html) can be used to train the keyword spotting models.
+
+You can install MLTK from PyPI,
+
+```sh
+python -m pip install silabs-mltk
+```
+
+For more installation details, refer to the [MLTK documentation](https://siliconlabs.github.io/mltk/index.html#installation).
+
+### Training and evaluation
 
 Examples below show the `mltk` commands you can use for `keyword_spotting_on_off_v2`, and the same commands can also be used with `keyword_spotting_on_of`.
 
