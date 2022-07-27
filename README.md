@@ -18,4 +18,4 @@ Within an application's directory you will generally find,
 
 ## License
 
-Content in this repository is generally available under the Apache 2.0 license. Some files have different licensing terms, and these will be clearly marked in the beginning of the file.
+Content in this repository is generally available under the Zlib license. See [LICENSE](LICENSE) for more details.
