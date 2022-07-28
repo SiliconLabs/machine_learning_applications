@@ -1,3 +1,10 @@
+"""Model training script for `keyword_spotting_on_off` model.
+
+Corresponds with the [MLTK] model with the same name.
+
+# References
+MLTK: https://github.com/SiliconLabs/mltk/blob/0.8.0/mltk/models/siliconlabs/keyword_spotting_on_off.py
+"""
 # See https://siliconlabs.github.io/mltk/docs/audio/audio_feature_generator.html
 frontend_settings = AudioFeatureGeneratorSettings()
 
