@@ -79,8 +79,3 @@ This model is based on `keyword_spotting_on_off`. Similarly to that model, it's 
 - Model architecture uses more convolutional filters: This gives the model better accuracy at the expense of RAM and execution latency
 - Dynamic spectrogram scaling: The audio spectrogram is quantized from uint16 to int8 using a dynamic scaling method
 - Higher resolution spectrograms
-
-### License
-
-These models were developed by Silicon Labs and are covered by a standard
-`Silicon Labs MSLA <https://www.silabs.com/about-us/legal/master-software-license-agreement>`_.

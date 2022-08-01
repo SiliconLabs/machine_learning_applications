@@ -18,4 +18,4 @@ Within an application's directory you will generally find,
 
 ## License
 
-Content in this repository is generally available under the Zlib license. See [LICENSE](LICENSE) for more details.
+Certain files and directories have specific licensing terms which are clearly marked. Aside from that, content in this repository is generally available under the Zlib license. See [LICENSE](LICENSE) for more details.
