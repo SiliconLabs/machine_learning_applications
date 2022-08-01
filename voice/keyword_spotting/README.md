@@ -18,7 +18,7 @@ For more installation details, refer to the [MLTK documentation](https://silicon
 
 ### Training and evaluation
 
-Examples below show the `mltk` commands you can use for `keyword_spotting_on_off_v2`, and the same commands can also be used with `keyword_spotting_on_of`.
+Examples below show the `mltk` commands you can use for `keyword_spotting_on_off_v2`, and the same commands can also be used with `keyword_spotting_on_off`.
 
 To train a model and produce the `.mltk.zip` folder, run
 
@@ -79,8 +79,3 @@ This model is based on `keyword_spotting_on_off`. Similarly to that model, it's 
 - Model architecture uses more convolutional filters: This gives the model better accuracy at the expense of RAM and execution latency
 - Dynamic spectrogram scaling: The audio spectrogram is quantized from uint16 to int8 using a dynamic scaling method
 - Higher resolution spectrograms
-
-### License
-
-These models were developed by Silicon Labs and are covered by a standard
-`Silicon Labs MSLA <https://www.silabs.com/about-us/legal/master-software-license-agreement>`_.
