@@ -18,7 +18,7 @@ For more installation details, refer to the [MLTK documentation](https://silicon
 
 ### Training and evaluation
 
-Examples below show the `mltk` commands you can use for `keyword_spotting_on_off_v2`, and the same commands can also be used with `keyword_spotting_on_of`.
+Examples below show the `mltk` commands you can use for `keyword_spotting_on_off_v2`, and the same commands can also be used with `keyword_spotting_on_off`.
 
 To train a model and produce the `.mltk.zip` folder, run
 
