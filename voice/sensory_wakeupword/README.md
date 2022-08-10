@@ -1,0 +1,192 @@
+# Sensory Wake Word Detection Demos
+
+This demo showcases how we can use Sensory's [TrulyHandsfree](https://www.sensory.com/wake-word/) solution for wake word detection to control Silicon Labs boards with our voice. In the provided examples we use this to control on-board LEDs. Sensory's solution uses deep neural networks, and several network models for different wake word phrases are included in this demo. All of these were trained online in just a few clicks through Sensory's platform, and converted to C headers using `xxd`.
+
+Pre-built binaries are provided for the Silicon Labs [Thunderboard Sense 2](https://www.silabs.com/development-tools/thunderboard/thunderboard-sense-two-kit) and [EFR32xG24](https://www.silabs.com/development-tools/wireless/efr32xg24-dev-kit) dev kits. The demo can also be built for other Silicon Labs devices that have a mic and at least two LEDs.
+
+Source code in this repository is adapted from our Embedded World 2022 demo.
+
+## Prerequisites
+
+To run the prebuilt binaries, you'll need
+
+- An [EFR32xG24](https://www.silabs.com/development-tools/wireless/efr32xg24-dev-kit) dev kit or a [Thunderboard Sense 2](https://www.silabs.com/development-tools/thunderboard/thunderboard-sense-two-kit) dev kit.
+- `commander` ([Simplicity Commander](https://www.silabs.com/developers/mcu-programming-options#programming)) to flash the binaries onto your device.
+
+To build the source code, you'll need
+
+- `make`
+- [GNU ARM Embedded Toolchain](https://developer.arm.com/downloads/-/gnu-rm), version 10.3-2021.10 or 10.3-2021.07
+- `slc` ([Silicon Labs Configurator](https://www.silabs.com/documents/public/user-guides/ug520-software-project-generation-configuration-with-slc-cli.pdf)) for project generation. Installation instructions can be found under Section 2 in the provided link.
+- [Gecko SDK >= v4.1](https://github.com/SiliconLabs/gecko_sdk)
+
+To configure `slc` to use the Gecko SDK and ARM GNU Embedded Toolchain you downloaded, run
+
+```sh
+slc configuration --sdk=<path/to/gecko_sdk>
+slc configuration --gcc-toolchain=<path/to/arm-gnu-gcc-toolchain>
+```
+
+## Prebuilt Binaries
+
+Prebuilt binaries for Silicon Labs' EFR32xG24 Dev Kit and Thunderboard Sense 2 are provided under [`bin/`](bin/). These run with the `hello_gecko` model. For details on this model and other available models, see the section on [#Model Selection](#model-selection).
+
+You can program your own device with these using [Simplicity Commander](https://www.silabs.com/developers/mcu-programming-options#programming),
+
+```sh
+# Assuming you've connected a EFR32xG24 Dev Kit
+# to your machine over USB,
+commander flash bin/efr32xg24_dev_kit/sensory_wakeupword.s37
+# Note: If you encounter issues when flashing,
+# try running `commander device recover` first.
+```
+
+### Example Output
+
+Here's a sample output, obtained using `screen` to read from to the USB serial port where an EFR32xG24 running this demo was connected.
+
+```txt
+#==============================================#
+#   Sensory TrulyHandsfree Wake Word Example   #
+#==============================================#
+#   Core Frequency:              78000000 [Hz] #
+#   Sample rate:                    16000 [Hz] #
+#   Model Name:                    hello_gecko #
+#==============================================#
+[k=   384] Recognized Hello Gecko   (id=1) with confidence 1455
+[k=   510] Recognized Bye Bye Gecko (id=2) with confidence 3332
+[k=   604] Recognized Gecko Green   (id=3) with confidence 4163
+[k=   695] Recognized Gecko Red     (id=4) with confidence 3300
+Average Inference Time [% of 15ms]: 70
+```
+
+## Building
+
+To build the demo for another Silicon Labs board, you will need to:
+
+1. Generate a project for your board based on the demo application. You can do this by importing it into [Simplicity Studio](https://www.silabs.com/developers/simplicity-studio) or by using [Silicon Labs Configurator (SLC)](https://www.silabs.com/documents/public/user-guides/ug520-software-project-generation-configuration-with-slc-cli.pdf).
+2. Cross-compile for your target device
+
+### Building for Series 2 Boards
+
+This section shows how to generate and build the demo for a Series 2 board, using BRD2601B (EFR32xG24 Dev Kit) as an example. We're using SLC here, but you can also import the demo project into Simplicity Studio by selecting the `.slcp` project file.
+
+First, generate a project targeting your device,
+
+```sh
+slc generate app/sensory_wakeupword.slcp --with brd2601b,device_init_dpll -d target/brd2601b
+```
+
+Then, build the project using `make`,
+
+```sh
+cd target/brd2601b
+make -f sensory_wakeupword.Makefile -j
+```
+
+The compiled code can then be found under `target/brd2601b/build/debug`, and can be flashed onto your board as described in the section covering [#Prebuilt Binaries](#prebuilt-binaries).
+
+### Building for Series 1 Boards
+
+Follow the same instructions as above, but omit the `device_init_dpll` component and target a Series 1 board (e.g. BRD4166A) instead.
+
+### Model Selection
+
+There's multiple models to detect different keywords/commands. The model files are located under [`include/model/<model>`](include/model). To choose between them, you can change the model configuration `#include` paths in [`app/app.c`](app/app.c) at line 50,
+
+```c
+-#include "model/hello_gecko/net.h"
+-#include "model/hello_gecko/search.h"
+-#include "model/hello_gecko/command.h"
+
++#include "model/go_silabs/net.h"
++#include "model/go_silabs/search.h"
++#include "model/go_silabs/command.h"
+```
+
+The available models are,
+
+- `hello_gecko`: Detects "Hello Gecko", "Bye Bye Gecko", "Gecko green" and "Gecko red".
+- `go_silabs`: Detects "Go Silabs".
+- `voice_genie`: Detects "Voice Genie".
+- `voice_genie_small`: A smaller model for detecting "Voice Genie".
+
+In addition to controlling LEDs, recognitions are written out over the serial port using UART. The tables in the following sections give an overview of what commands each model supports.
+
+#### Hello Gecko
+
+| Model                | Event         | Command / Trigger              |
+|----------------------|---------------|--------------------------------|
+|`hello_gecko`         | Green LED On  | "Hello Gecko" or "Gecko Green" |
+|                      | Red LED On    | "Hello Gecko" or "Gecko Red"   |
+|                      | Green LED Off | "Gecko Red" or "Bye Bye Gecko" |
+|                      | Red LED Off   | "Gecko Green" or Bye Bye Gecko |
+
+#### Go Silabs
+
+| Model                | Event         | Command / Trigger              |
+|----------------------|---------------|--------------------------------|
+|`go_silabs`           | Green LED On  | "Go Silabs"                    |
+|                      | Red LED On    | "Go Silabs"                    |
+|                      | Green LED Off | Timeout (2s)                   |
+|                      | Red LED Off   | Timeout (2s)                   |
+
+#### Voice Genie
+
+| Model                | Event         | Command / Trigger              |
+|----------------------|---------------|--------------------------------|
+| `voice_genie`        | Green LED On  | "Voice Genie"                  |
+|                      | Red LED On    | "Voice Genie"                  |
+|                      | Green LED Off | Timeout (2s)                   |
+|                      | Red LED Off   | Timeout (2s)                   |
+
+#### Voice Genie (Small)
+
+| Model                | Event         | Command / Trigger              |
+|----------------------|---------------|--------------------------------|
+|`voice_genie_small`   | Green LED On  | "Voice Genie"                  |
+|                      | Red LED On    | "Voice Genie"                  |
+|                      | Green LED Off | Timeout (2s)                   |
+|                      | Red LED Off   | Timeout (2s)                   |
+
+### Quick Note: Series 1 and Series 2 Boards
+
+There are a couple of differences between builds for Series 1 and Series 2 boards which are described in the following two sections.
+
+#### Floating Point ABI
+
+The demo code links against precompiled libraries from Sensory. These libraries use floating point arithmetic. Due to differences in how apps targeting Series 1 boards and Series 2 boards compile floating point code, we link against separate static libraries when compiling the app for Series 1 and Series 2. Specifically, Series 1 uses `softfp` floating point ABI and Series 2 uses `hard` floating point ABI.
+
+For more details on floating point ABIs, check out [this page](https://embeddedartistry.com/blog/2017/10/11/demystifying-arm-floating-point-compiler-options/).
+
+#### Clock Frequency
+
+Series 2 boards support scaling up the CPU core frequency using the `device_init_dpll` GSDK component. To increase the throughput when running on Series 2 boards, we pull in the `device_init_dpll` component in the corresponding project file. For EFR32xG24, this enables running at 78Mhz instead of 39MHz
+
+## Performance
+
+Below you can find performance numbers recorded using EFR32xG24 with a 78MHz CPU core frequency.
+
+The demo performs inference for voice recognition periodically every 15ms. The inference times shown below indicate how long the inference processing takes, as a percentage of these time windows.
+
+| Model                    |    Inference time [%] | Approx. model size [kB] |
+|------------------------- |-----------------------|-------------------------|
+|`hello_gecko`             |    72                 |  190                    |
+|`go_silabs`               |    63                 |  165                    |
+|`voice_genie`             |    57                 |  165                    |
+|`voice_genie_small`       |    26                 |  61                     |
+
+### Average Inference Time
+
+[`app/app.c`](app/app.c) has a `#define` named `DISPLAY_INFERENCE_TIME` which can be toggled to select whether the inference time should be printed out over the serial port in addition to the recognitions. It's enabled by default.
+
+## License
+
+Silicon Labs Master Software License Agreement (MSLA).
+
+The licensor of this software is Silicon Laboratories Inc. Your use of this
+software is governed by the terms of Silicon Labs Master Software License
+Agreement (MSLA) available at
+www.silabs.com/about-us/legal/master-software-license-agreement. This
+software is distributed to you in Source Code format and is governed by the
+sections of the MSLA applicable to Source Code.

@@ -1,0 +1,63 @@
+project_name: sensory_wakeupword
+package: platform
+quality: internal
+label: Sensory's Deeply Embedded DSP Speech Recognition Technology
+description: >
+  This example project demos wakeup word detection using Sensory for Silicon Labs devices.
+category: Example|Machine Learning
+include:
+  - path: .
+    file_list:
+      - path: app.h
+  - path: include
+    file_list:
+      - path: sensory.h
+      - path: model/go_silabs/command.h
+      - path: model/go_silabs/net.h
+      - path: model/go_silabs/search.h
+      - path: model/hello_gecko/command.h
+      - path: model/hello_gecko/net.h
+      - path: model/hello_gecko/search.h
+      - path: model/voice_genie/command.h
+      - path: model/voice_genie/net.h
+      - path: model/voice_genie/search.h
+      - path: model/voice_genie_small/command.h
+      - path: model/voice_genie_small/net.h
+      - path: model/voice_genie_small/search.h
+
+library:
+  - path: lib/sensory.a
+    condition:
+        - "device_series_1"
+  - path: lib/sensoryhf.a
+    condition:
+        - "device_series_2"
+source:
+  - path: app.c
+  - path: main.c
+component:
+  - id: emlib_cmu
+  - id: sl_memory
+  - id: sl_system
+  - id: device_init
+  - id: sleeptimer
+  - id: iostream_retarget_stdio
+  - id: iostream_recommended_stream
+  - id: mic_driver
+  - instance: [led0, led1]
+    id: simple_led
+define:
+  - name: NDEBUG
+configuration:
+  - name: SL_BOARD_ENABLE_SENSOR_MICROPHONE
+    value: 1
+  - name: SL_BOARD_ENABLE_VCOM
+    value: "1"
+  - name: SL_IOSTREAM_USART_VCOM_CONVERT_BY_DEFAULT_LF_TO_CRLF
+    value: "1"
+  - name: SL_IOSTREAM_EUSART_VCOM_CONVERT_BY_DEFAULT_LF_TO_CRLF
+    value: "1"
+tag:
+  - hardware:component:microphone
+  - hardware:component:led:2+
+  - level:advanced
