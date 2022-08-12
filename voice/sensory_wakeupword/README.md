@@ -182,11 +182,6 @@ The demo performs inference for voice recognition periodically every 15ms. The i
 
 ## License
 
-Silicon Labs Master Software License Agreement (MSLA).
+Silicon Labs Master Software License Agreement (MSLA) in combination with Sensory THF Micro End User License Agreement (Sensory THF Micro EULA).
 
-The licensor of this software is Silicon Laboratories Inc. Your use of this
-software is governed by the terms of Silicon Labs Master Software License
-Agreement (MSLA) available at
-www.silabs.com/about-us/legal/master-software-license-agreement. This
-software is distributed to you in Source Code format and is governed by the
-sections of the MSLA applicable to Source Code.
+See [LICENSE](LICENSE) for details.

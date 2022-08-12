@@ -1,6 +1,22 @@
+The source code files in this example application (`sensory_wakeupword`)
+are governed by the Silicon Labs Master Software License Agreement (MSLA).
+
+The precompiled libraries (`app/lib/sensory.a`, `app/lib/sensoryhf.a`)
+and precompiled binaries (`bin/efr32xg24_dev_kit/sensory_wakeupword.s37`, `bin/thunderboard_sense_2/sensory_wakeupword.s37`) in this example application
+are governed by the Sensory THF Micro End User License Agreement (Sensory THF Micro EULA).
+
+---
+Silicon Labs Master Software License Agreement (MSLA):
+
 The licensor of this software is Silicon Laboratories Inc. Your use of this
 software is governed by the terms of Silicon Labs Master Software License
 Agreement (MSLA) available at
 www.silabs.com/about-us/legal/master-software-license-agreement. This
 software is distributed to you in Source Code format and is governed by the
 sections of the MSLA applicable to Source Code.
+
+---
+Sensory THF Micro End User License Agreement (Sensory THF Micro EULA):
+
+The license agreement is available in the file `Sensory THF Micro EULA.pdf`,
+located in the same directory as this `LICENSE` file.
