@@ -74,7 +74,7 @@ This section shows how to generate and build the demo for a Series 2 board, usin
 First, generate a project targeting your device,
 
 ```sh
-slc generate app/sensory_wakeupword.slcp --with brd2601b,device_init_dpll -d target/brd2601b
+slc generate app/sensory_wakeupword.slcp --with brd2601b -d target/brd2601b
 ```
 
 Then, build the project using `make`,
@@ -88,7 +88,7 @@ The compiled code can then be found under `target/brd2601b/build/debug`, and can
 
 ### Building for Series 1 Boards
 
-Follow the same instructions as above, but omit the `device_init_dpll` component and target a Series 1 board (e.g. BRD4166A) instead.
+Follow the same instructions as above, but use the `sensory_wakeupword_series_1.slcp` project file and target a Series 1 board (e.g. BRD4166A) instead.
 
 ### Model Selection
 
