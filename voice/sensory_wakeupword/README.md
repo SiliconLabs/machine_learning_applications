@@ -64,10 +64,41 @@ Average Inference Time [% of 15ms]: 70
 
 To build the demo for another Silicon Labs board, you will need to:
 
-1. Generate a project for your board based on the demo application. You can do this by importing it into [Simplicity Studio](https://www.silabs.com/developers/simplicity-studio) or by using [Silicon Labs Configurator (SLC)](https://www.silabs.com/documents/public/user-guides/ug520-software-project-generation-configuration-with-slc-cli.pdf).
+1. Generate a project for your board based on the demo application. You can do this by importing it into [Simplicity Studio](https://www.silabs.com/developers/simplicity-studio) or by using [Silicon Labs Configurator (SLC)](https://www.silabs.com/documents/public/user-guides/ug520-software-project-generation-configuration-with-slc-cli.pdf) and command line tools.
 2. Cross-compile for your target device
 
-### Building for Series 2 Boards
+### Building with Simplicity Studio
+
+This section shows how you can generate and build the demo for your board using Simplicity Studio. To to so, you will need to:
+
+1. Add this Git repository as an external repository in Simplicity Studio
+2. Create a new project using the Simplicity Studio Launcher
+
+#### Adding an external repository to Simplicity Studio
+
+Simplicity Studio can be configured to search for demos and project templates in external repositories. To add an external repository,
+
+1. Open Simplicity Studio
+2. Open the Preferences view (the cogwheel at the top of the window)
+3. Select `Simplicity Studio`→`External Repos`
+4. Click on `Add...` and configure a new external repository with the following settings
+    - **Name**: Machine Learning Applications on GitHub
+    - **URI**:  <https://github.com/SiliconLabs/machine_learning_applications.git>
+5. Select the newly added external repository and click on `Update...`
+6. The Sensory Wakeup Word demo application should now be visible under `Example Projects & Demos` in the Simplicity Studio launcher when configuring new projects for EFR32xG24 Dev Kits (BRD2601B) and Thunderboard Sense 2 Dev Kits (BRD4166A).
+
+#### Setting up the Sensory Wakeup Word demo in Simplicity Studio
+
+You can then choose this demo as a template when generating a project through Simplicity Studio's launcher.
+
+1. Open the Simplicity Studio Launcher (the rocket button in the top right corner of the window)
+2. Connect your EFR32xG24 Dev Kit or Thunderboard Sense 2
+3. Choose your device in the Connected Devices dropdown, and click on `Start`
+4. Navigate to `Example Projects & Demos`. In the context menu on the left, scroll down to `Provider`, and select `Machine Learning Applications on GitHub`.
+5. Locate the `Sensory Wakeup Word Demo Application (Series 1|2)` application and click on `Create`. You can leave the project conifguration settings to their defaults, and click on `Finish` to set up the project for your board.
+6. Inside your project, you can compile the code and run it on your board by clicking on `Run`→`Debug` in the window context menu and selecting your connected board.
+
+### Building with command line tools
 
 This section shows how to generate and build the demo for a Series 2 board, using BRD2601B (EFR32xG24 Dev Kit) as an example. We're using SLC here, but you can also import the demo project into Simplicity Studio by selecting the `.slcp` project file.
 
