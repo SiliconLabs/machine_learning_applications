@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?><model:MDescriptors xmlns:model="http://www.silabs.com/ss/Studio.ecore">
+<descriptors name="sensory_wakeupword" label="Sensory Wakeup Word Demo Application (Series 2)" description="This example project demos wakeup word detection using Sensory's TrulyHandsFree solution for Series 2 boards.&#xA;">
+    <properties key="namespace" value="template.uc"/>
+    <properties key="keywords" value="universal\ configurator"/>
+    <properties key="projectFilePaths" value="voice/sensory_wakeupword/app/sensory_wakeupword.slcp"/>
+    <properties key="readmeFiles" value="voice/sensory_wakeupword/README.md"/>
+    <properties key="boardCompatibility" value="brd2601a brd2601b"/>
+    <properties key="partCompatibility" value=".*efr32mg24.*"/>
+    <properties key="ideCompatibility" value="iar-embedded-workbench makefile-ide segger-embedded-studio simplicity-ide"/>
+    <properties key="toolchainCompatibility" value="gcc iar segger"/>
+    <properties key="category" value="Example|Machine Learning"/>
+    <properties key="quality" value="EXPERIMENTAL"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value=""/>
+  </descriptors>
+  <descriptors name="sensory_wakeupword" label="Sensory Wakeup Word Demo Application (Series 1)" description="This example project demos wakeup word detection using Sensory's TrulyHandsFree solution for Series 1 boards.&#xA;">
+    <properties key="namespace" value="template.uc"/>
+    <properties key="keywords" value="universal\ configurator"/>
+    <properties key="projectFilePaths" value="voice/sensory_wakeupword/app/sensory_wakeupword_series_1.slcp"/>
+    <properties key="readmeFiles" value="voice/sensory_wakeupword/README.md"/>
+    <properties key="boardCompatibility" value="brd4166a"/>
+    <properties key="partCompatibility" value=".*efr32mg12p.*"/>
+    <properties key="ideCompatibility" value="iar-embedded-workbench makefile-ide segger-embedded-studio simplicity-ide"/>
+    <properties key="toolchainCompatibility" value="gcc iar segger"/>
+    <properties key="category" value="Example|Machine Learning"/>
+    <properties key="quality" value="EXPERIMENTAL"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value=""/>
+  </descriptors>
+</model:MDescriptors>

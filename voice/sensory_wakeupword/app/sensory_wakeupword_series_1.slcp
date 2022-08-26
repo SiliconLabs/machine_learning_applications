@@ -1,9 +1,9 @@
-project_name: sensory_wakeupword
+project_name: sensory_wakeupword_series_1
 package: platform
 quality: internal
 label: Sensory's Deeply Embedded DSP Speech Recognition Technology
 description: >
-  This example project demos wakeup word detection using Sensory for Silicon Labs Series 2 devices.
+  This example project demos wakeup word detection using Sensory for Silicon Labs Series 1 devices.
 category: Example|Machine Learning
 include:
   - path: .
@@ -44,7 +44,6 @@ component:
   - id: iostream_retarget_stdio
   - id: iostream_recommended_stream
   - id: mic_driver
-  - id: device_init_dpll
   - instance: [led0, led1]
     id: simple_led
 define:
