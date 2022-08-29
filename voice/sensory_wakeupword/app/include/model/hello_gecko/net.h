@@ -20,7 +20,7 @@
  * ------------------------- DO NOT USE IN A PRODUCT -------------------------
  */
 
-const unsigned short dnn_wakeword_netLabel[] = {
+const unsigned short __ALIGNED(4) dnn_wakeword_netLabel[] = {
 
 29267,	 // 0x7253
 25441,	 // 0x6361

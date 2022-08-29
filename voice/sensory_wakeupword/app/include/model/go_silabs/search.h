@@ -59,7 +59,7 @@
  */
 
 const char *wakeword_phrases[] = {WAKEWORD_PHRASE_0, WAKEWORD_PHRASE_1, WAKEWORD_PHRASE_2};
-const unsigned short gs_wakeword_grammarLabel[] = {
+const unsigned short __ALIGNED(4) gs_wakeword_grammarLabel[] = {
 
    60,	 // 0x003c
   217,	 // 0x00d9

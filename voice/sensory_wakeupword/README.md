@@ -86,12 +86,13 @@ To build a new model on Sensory's VoiceHub, follow these steps:
   - Copy the file contents from `*net.h` in the extracted dir to `net.h` in the directory you created
   - Copy the file contents from `*search.h` in the extracted dir to `search.h`in the directory you created
   - Append the file contents from `*search.c` from the extracted dir to the content in the `search.h` file you created
+  - Change `const unsigned short` to `const unsigned short __ALIGNED(4)` in `search.h` and `net.h`. This ensures models are aligned on 4-byte boundaries in memory.
   - Optionally add a `MODEL_NAME` `#define` with a string identifier for your model in `search.h`
 
 You can optionally use the provided Python script `scripts/add_model.py` to automate this. To do so,
 
 - In your terminal, navigate to the `sensory_wakeupword` project directory
-- Run `python scripts/add_model.py <path/to/extracted/model> --name <name_for_your_model>`
+- Run `python scripts/add_model.py <path/to/extracted/model> -o <name_for_your_model>`
 
 Then, you can use this model in the project by changing the `#include` statements in [`app/app.c`](app/app.c) as described in the section on [Model selection](#model-selection).
 

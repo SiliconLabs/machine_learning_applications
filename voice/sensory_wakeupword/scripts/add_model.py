@@ -77,6 +77,19 @@ def sensory_net_file(model_dir: Path) -> Path:
     except StopIteration:
         raise ValueError(f"Expected *net.c file in model directory {model_dir}")
 
+def add_aligned_attribute(file: Path) -> int:
+    count_changed_lines: int = 0
+    with open(file, 'r') as f:
+        lines = f.readlines()
+    for i in range(len(lines)):
+        line = lines[i]
+        if 'const unsigned short' in line and not 'const unsigned short __ALIGNED' in line:
+            lines[i] = line.replace('const unsigned short', 'const unsigned short __ALIGNED(4)')
+            count_changed_lines += 1
+    with open(file, 'w') as f:
+        f.writelines(lines)
+    return count_changed_lines
+
 def add_model(config: Config) -> Path:
     """Adds a new model to the `sensory_wakeupword` demo application.
 
@@ -117,6 +130,9 @@ def add_model(config: Config) -> Path:
         [sensory_net_file(input_directory)],
         output_directory / "net.h"
     )
+
+    add_aligned_attribute(output_directory / "net.h")
+    add_aligned_attribute(output_directory / "search.h")
 
     return output_directory
 
