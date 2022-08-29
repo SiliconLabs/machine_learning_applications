@@ -172,6 +172,7 @@ There's multiple models to detect different keywords/commands. The model files a
 The available models are,
 
 - `hello_gecko`: Detects "Hello Gecko", "Bye Bye Gecko", "Gecko red" and "Gecko green"
+- `hello_gecko`: A smaller model for detecting "Hello Gecko", "Bye Bye Gecko", "Gecko red" and "Gecko green"
 - `go_silabs`: Detects "Go Silabs".
 - `voice_genie`: Detects "Voice Genie".
 - `voice_genie_small`: A smaller model for detecting "Voice Genie".
@@ -216,6 +217,7 @@ The demo performs inference for voice recognition periodically every 15ms. The i
 | Model                    |    Inference time [%] | Approx. model size [kB] |
 |------------------------- |-----------------------|-------------------------|
 |`hello_gecko`             |    72                 |  190                    |
+|`hello_gecko_small`       |    36                 |  83                     |
 |`go_silabs`               |    63                 |  165                    |
 |`voice_genie`             |    57                 |  165                    |
 |`voice_genie_small`       |    26                 |  61                     |
