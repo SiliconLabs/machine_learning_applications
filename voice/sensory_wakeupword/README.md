@@ -1,8 +1,10 @@
 # Sensory Wake Word Detection Demos
 
-This demo showcases how we can use Sensory's [TrulyHandsfree](https://www.sensory.com/wake-word/) solution for wake word detection to control Silicon Labs boards with our voice. In the provided examples we use this to control on-board LEDs. Sensory's solution uses deep neural networks, and several network models for different wake word phrases are included in this demo. All of these were trained online in just a few clicks through Sensory's platform, and converted to C headers using `xxd`.
+This demo showcases to can use Sensory's [TrulyHandsfree](https://www.sensory.com/wake-word/) (THF) solution for wake word detection to control Silicon Labs boards with your voice. In the provided examples we use different wake works to control on-board LEDs. Several models implementing different wake word phrases are included in this demo. All of these were trained online in just a few clicks through Sensory's platform.
 
 Pre-built binaries are provided for the Silicon Labs [Thunderboard Sense 2](https://www.silabs.com/development-tools/thunderboard/thunderboard-sense-two-kit) and [EFR32xG24](https://www.silabs.com/development-tools/wireless/efr32xg24-dev-kit) dev kits. The demo can also be built for other Silicon Labs devices that have a mic and at least two LEDs.
+
+You can create you own wake words on Sensory's VoiceHub and update this demo to try them out. See [Creating a New model](#creating-a-new-model) for instructions.
 
 Source code in this repository is adapted from our Embedded World 2022 demo.
 
@@ -27,7 +29,7 @@ slc configuration --sdk=<path/to/gecko_sdk>
 slc configuration --gcc-toolchain=<path/to/arm-gnu-gcc-toolchain>
 ```
 
-## Prebuilt Binaries
+## Prebuilt binaries
 
 Prebuilt binaries for Silicon Labs' EFR32xG24 Dev Kit and Thunderboard Sense 2 are provided under [`bin/`](bin/). These run with the `hello_gecko` model. For details on this model and other available models, see the section on [#Model Selection](#model-selection).
 
@@ -41,7 +43,7 @@ commander flash bin/efr32xg24_dev_kit/sensory_wakeupword.s37
 # try running `commander device recover` first.
 ```
 
-### Example Output
+### Example output
 
 Here's a sample output, obtained using `screen` to read from to the USB serial port where an EFR32xG24 running this demo was connected.
 
@@ -59,6 +61,39 @@ Here's a sample output, obtained using `screen` to read from to the USB serial p
 [k=   695] Recognized Gecko Red     (id=4) with confidence 3300
 Average Inference Time [% of 15ms]: 70
 ```
+
+## Creating a new model
+
+To create a new model for this demo, you will need to *i)* build it on Sensory's VoiceHub, and *ii)* add it to the demo project.
+
+### Building a model on VoiceHub
+
+To build a new model on Sensory's VoiceHub, follow these steps:
+
+- Go to [sensory.com/voicehub](https://www.sensory.com/voicehub) and click on `Request Access`
+- Fill out the form and include `Silicon Labs EFR32` as target DSP
+- You will receive login credentials from a Sensory representative
+- Visit [voicehub.sensory.com](https://voicehub.sensory.com) and setup your account using your login credentials
+- Create a `New Project` for `Wake Word`
+- Type your words, and build the project with Silicon Labs as the target. The model should have at least one and at most 4 keyword phrases.
+- Once the model is ready, download it by clicking on `Download` and then `Model`. Afterwards, extract the downloaded contents.
+
+### Adding a model to the project
+
+- Under `app/include/model` in this project, create a new directory with your model's name (e.g. `app/include/model/my_wakeword`) and inside this directory create two new files `net.h` and `search.h`.
+- Download the model files , and extract the contents.
+- In the extracted folder, locate the files ending with `net.h`, `search.c` and `search.h`.
+  - Copy the file contents from `*net.h` in the extracted dir to `net.h` in the directory you created
+  - Copy the file contents from `*search.h` in the extracted dir to `search.h`in the directory you created
+  - Append the file contents from `*search.c` from the extracted dir to the content in the `search.h` file you created
+  - Optionally add a `MODEL_NAME` `#define` with a string identifier for your model in `search.h`
+
+You can optionally use the provided Python script `scripts/add_model.py` to automate this. To do so,
+
+- In your terminal, navigate to the `sensory_wakeupword` project directory
+- Run `python scripts/add_model.py <path/to/extracted/model> --name <name_for_your_model>`
+
+Then, you can use this model in the project by changing the `#include` statements in [`app/app.c`](app/app.c) as described in the section on [Model selection](#model-selection).
 
 ## Building
 
@@ -117,80 +152,57 @@ make -f sensory_wakeupword.Makefile -j
 
 The compiled code can then be found under `target/brd2601b/build/debug`, and can be flashed onto your board as described in the section covering [#Prebuilt Binaries](#prebuilt-binaries).
 
-### Building for Series 1 Boards
+### Building for Series 1 boards
 
 Follow the same instructions as above, but use the `sensory_wakeupword_series_1.slcp` project file and target a Series 1 board (e.g. BRD4166A) instead.
 
-### Model Selection
+### Model selection
 
 There's multiple models to detect different keywords/commands. The model files are located under [`include/model/<model>`](include/model). To choose between them, you can change the model configuration `#include` paths in [`app/app.c`](app/app.c) at line 50,
 
 ```c
 -#include "model/hello_gecko/net.h"
 -#include "model/hello_gecko/search.h"
--#include "model/hello_gecko/command.h"
 
 +#include "model/go_silabs/net.h"
 +#include "model/go_silabs/search.h"
-+#include "model/go_silabs/command.h"
 ```
 
 The available models are,
 
-- `hello_gecko`: Detects "Hello Gecko", "Bye Bye Gecko", "Gecko green" and "Gecko red".
+- `hello_gecko`: Detects "Hello Gecko", "Bye Bye Gecko", "Gecko red" and "Gecko green"
 - `go_silabs`: Detects "Go Silabs".
 - `voice_genie`: Detects "Voice Genie".
 - `voice_genie_small`: A smaller model for detecting "Voice Genie".
 
-In addition to controlling LEDs, recognitions are written out over the serial port using UART. The tables in the following sections give an overview of what commands each model supports.
+#### Model behaviour
 
-#### Hello Gecko
+Whenever a keyword phrase is detected, the recognition is written out over the serial port using UART.
 
-| Model                | Event         | Command / Trigger              |
-|----------------------|---------------|--------------------------------|
-|`hello_gecko`         | Green LED On  | "Hello Gecko" or "Gecko Green" |
-|                      | Red LED On    | "Hello Gecko" or "Gecko Red"   |
-|                      | Green LED Off | "Gecko Red" or "Bye Bye Gecko" |
-|                      | Red LED Off   | "Gecko Green" or Bye Bye Gecko |
+In addition, the onboard LEDs are controlled based on which keyword is detected.
 
-#### Go Silabs
+| Keyword              | Event                                 |
+|----------------------|---------------------------------------|
+| 1st                  | Green and red LEDs turn on            |
+| 2nd                  | Green and red LEDs turn off           |
+| 3rd                  | Red LED turns on, green LED turns off |
+| 4th                  | Green LED turns on, red LED turns off |
 
-| Model                | Event         | Command / Trigger              |
-|----------------------|---------------|--------------------------------|
-|`go_silabs`           | Green LED On  | "Go Silabs"                    |
-|                      | Red LED On    | "Go Silabs"                    |
-|                      | Green LED Off | Timeout (2s)                   |
-|                      | Red LED Off   | Timeout (2s)                   |
+To give an example: If your model has the wakeword phrases `[Sailboats, Airplanes]`, then then a detection of the phrase `Sailboats` would turn both LEDs on, and a detection of the phrase `Airplanes` would turn both LEDs off.
 
-#### Voice Genie
+For models that only have one keyword phrase, the LEDs turn off automatically after a short duration.
 
-| Model                | Event         | Command / Trigger              |
-|----------------------|---------------|--------------------------------|
-| `voice_genie`        | Green LED On  | "Voice Genie"                  |
-|                      | Red LED On    | "Voice Genie"                  |
-|                      | Green LED Off | Timeout (2s)                   |
-|                      | Red LED Off   | Timeout (2s)                   |
-
-#### Voice Genie (Small)
-
-| Model                | Event         | Command / Trigger              |
-|----------------------|---------------|--------------------------------|
-|`voice_genie_small`   | Green LED On  | "Voice Genie"                  |
-|                      | Red LED On    | "Voice Genie"                  |
-|                      | Green LED Off | Timeout (2s)                   |
-|                      | Red LED Off   | Timeout (2s)                   |
-
-### Quick Note: Series 1 and Series 2 Boards
+### Quick Note: Series 1 and Series 2 boards
 
 There are a couple of differences between builds for Series 1 and Series 2 boards which are described in the following two sections.
 
-#### Floating Point ABI
+#### Floating point ABI
 
 The demo code links against precompiled libraries from Sensory. These libraries use floating point arithmetic. Due to differences in how apps targeting Series 1 boards and Series 2 boards compile floating point code, we link against separate static libraries when compiling the app for Series 1 and Series 2. Specifically, Series 1 uses `softfp` floating point ABI and Series 2 uses `hard` floating point ABI.
 
 For more details on floating point ABIs, check out [this page](https://embeddedartistry.com/blog/2017/10/11/demystifying-arm-floating-point-compiler-options/).
 
-#### Clock Frequency
+#### Clock frequency
 
 Series 2 boards support scaling up the CPU core frequency using the `device_init_dpll` GSDK component. To increase the throughput when running on Series 2 boards, we pull in the `device_init_dpll` component in the corresponding project file. For EFR32xG24, this enables running at 78Mhz instead of 39MHz
 
