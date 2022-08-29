@@ -31,7 +31,7 @@ slc configuration --gcc-toolchain=<path/to/arm-gnu-gcc-toolchain>
 
 ## Prebuilt binaries
 
-Prebuilt binaries for Silicon Labs' EFR32xG24 Dev Kit and Thunderboard Sense 2 are provided under [`bin/`](bin/). These run with the `hello_gecko` model. For details on this model and other available models, see the section on [#Model Selection](#model-selection).
+Prebuilt binaries for Silicon Labs' EFR32xG24 Dev Kit and Thunderboard Sense 2 are provided under [`bin/`](bin/). These run with the `hello_gecko_small` model. For details on this model and other available models, see the section on [#Model Selection](#model-selection).
 
 You can program your own device with these using [Simplicity Commander](https://www.silabs.com/developers/mcu-programming-options#programming),
 
@@ -53,13 +53,13 @@ Here's a sample output, obtained using `screen` to read from to the USB serial p
 #==============================================#
 #   Core Frequency:              78000000 [Hz] #
 #   Sample rate:                    16000 [Hz] #
-#   Model Name:                    hello_gecko #
+#   Model Name:              hello_gecko_small #
 #==============================================#
-[k=   384] Recognized Hello Gecko   (id=1) with confidence 1455
-[k=   510] Recognized Bye Bye Gecko (id=2) with confidence 3332
-[k=   604] Recognized Gecko Green   (id=3) with confidence 4163
-[k=   695] Recognized Gecko Red     (id=4) with confidence 3300
-Average Inference Time [% of 15ms]: 70
+[k=   171] Recognized Hello Gecko   (id=1) with confidence 908
+[k=   306] Recognized Bye Bye Gecko (id=2) with confidence 1950
+[k=   446] Recognized Gecko Red     (id=3) with confidence 2237
+[k=   568] Recognized Gecko Green   (id=4) with confidence 1781
+Average Inference Time [% of 15ms]: 36
 ```
 
 ## Creating a new model
