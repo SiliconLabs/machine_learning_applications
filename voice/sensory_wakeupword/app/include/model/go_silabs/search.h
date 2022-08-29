@@ -29,7 +29,7 @@
 /* The following phrases (Hex format) correspond to the word IDs emitted by the recognizer. */
 #define WAKEWORD_PHRASE_COUNT 3
 #define WAKEWORD_PHRASE_0 "SILENCE"	/* Legacy system phrase */
-#define WAKEWORD_PHRASE_1 "\x67\x6F\x5F\x73\x61\x61\x79\x6C\x61\x62\x73"	/* Phrase: go_saaylabs */
+#define WAKEWORD_PHRASE_1 "Go Silabs"	/* Phrase: go_saaylabs */
 #define WAKEWORD_PHRASE_2 "nota"	/* Legacy system phrase */
 
 

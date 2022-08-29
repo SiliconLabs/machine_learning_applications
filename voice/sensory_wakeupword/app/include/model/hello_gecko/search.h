@@ -29,10 +29,10 @@
 /* The following phrases (Hex format) correspond to the word IDs emitted by the recognizer. */
 #define WAKEWORD_PHRASE_COUNT 6
 #define WAKEWORD_PHRASE_0 "SILENCE"	/* Legacy system phrase */
-#define WAKEWORD_PHRASE_1 "\x68\x65\x6C\x6C\x6F\x5F\x67\x6B\x65\x6B\x6B\x6F"	/* Phrase: hello_gkekko */
-#define WAKEWORD_PHRASE_2 "\x62\x79\x65\x5F\x62\x79\x65\x5F\x67\x6B\x65\x63\x6B\x6F"	/* Phrase: bye_bye_gkecko */
-#define WAKEWORD_PHRASE_3 "\x67\x6B\x65\x63\x6B\x6F\x5F\x72\x65\x64"	/* Phrase: gkecko_red */
-#define WAKEWORD_PHRASE_4 "\x67\x6B\x65\x63\x6B\x6F\x5F\x67\x72\x65\x65\x6E"	/* Phrase: gkecko_green */
+#define WAKEWORD_PHRASE_1 "Hello Gecko"	/* Phrase: hello_gkekko */
+#define WAKEWORD_PHRASE_2 "Bye Bye Gecko"	/* Phrase: bye_bye_gkecko */
+#define WAKEWORD_PHRASE_3 "Gecko Red"	/* Phrase: gkecko_red */
+#define WAKEWORD_PHRASE_4 "Gecko Green"	/* Phrase: gkecko_green */
 #define WAKEWORD_PHRASE_5 "nota"	/* Legacy system phrase */
 
 
