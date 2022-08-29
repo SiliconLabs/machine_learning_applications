@@ -12,16 +12,12 @@ include:
   - path: include
     file_list:
       - path: sensory.h
-      - path: model/go_silabs/command.h
       - path: model/go_silabs/net.h
       - path: model/go_silabs/search.h
-      - path: model/hello_gecko/command.h
       - path: model/hello_gecko/net.h
       - path: model/hello_gecko/search.h
-      - path: model/voice_genie/command.h
       - path: model/voice_genie/net.h
       - path: model/voice_genie/search.h
-      - path: model/voice_genie_small/command.h
       - path: model/voice_genie_small/net.h
       - path: model/voice_genie_small/search.h
 
