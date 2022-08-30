@@ -218,15 +218,15 @@ Series 2 boards support scaling up the CPU core frequency using the `device_init
 
 Below you can find performance numbers recorded using EFR32xG24 with a 78MHz CPU core frequency.
 
-The demo performs inference for voice recognition periodically every 15ms. The inference times shown below indicate how long the inference processing takes, as a percentage of these time windows.
+The demo application performs inference periodically every 15ms, and the *Load* column indicates the percentage of these 15ms windows that's spent querying the model. The second column shows the same data as the first, expressed as a duration.
 
-| Model                    |    Inference time [%] | Approx. model size [kB] |
-|------------------------- |-----------------------|-------------------------|
-|`hello_gecko`             |    72                 |  190                    |
-|`hello_gecko_small`       |    36                 |  83                     |
-|`go_silabs`               |    63                 |  165                    |
-|`voice_genie`             |    57                 |  165                    |
-|`voice_genie_small`       |    26                 |  61                     |
+| Model                | Load [%] | Inference time [ms] |  Approx. model size [kB] |
+|----------------------|----------|---------------------|--------------------------|
+|`hello_gecko`         | 72       | 10.8                |   190                    |
+|`hello_gecko_small`   | 36       | 5.4                 |   83                     |
+|`go_silabs`           | 63       | 9.45                |   165                    |
+|`voice_genie`         | 57       | 8.                  |   165                    |
+|`voice_genie_small`   | 26       | 3.9                 |   61                     |
 
 ### Average Inference Time
 
