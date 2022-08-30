@@ -225,7 +225,8 @@ static void process_brick_callback(recognition_context_t* context)
   bool red_led_on = wakeword_should_enable_red_led(context->wordID);
   bool green_led_on = wakeword_should_enable_green_led(context->wordID);
 
-  printf("[k=%6lu] Recognized %-13s (id=%d) with confidence %d\n", (long unsigned int)context->timestep, label, context->wordID, context->finalScore);
+  int8_t confidence_pct = (int8_t)(0.0030517578125 * context->nnpqScore); // (100 * (1/32768))
+  printf("[k=%6lu] Recognized %-13s (id=%d) with confidence %d%%\n", (long unsigned int)context->timestep, label, context->wordID, confidence_pct);
   // The LED timer timeout for the model must be specified in model/<name>/command.h
   if (should_have_timeout_for_leds()) {
     schedule_timer_to_turn_off_leds(1500);
