@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><model:MDescriptors xmlns:model="http://www.silabs.com/ss/Studio.ecore">
-<descriptors name="sensory_wakeupword" label="Sensory Wakeup Word Demo Application (Series 2)" description="This example project demos wakeup word detection using Sensory's TrulyHandsFree solution for Series 2 boards.&#xA;">
+<descriptors name="sensory_wakeupword" label="Sensory Wakeup Word Demo Application (Series 2)" description=" This example project demos wakeup word detection using Sensory's TrulyHandsFree (THF) solution for Series 2 boards.&#xA;">
     <properties key="namespace" value="template.uc"/>
     <properties key="keywords" value="universal\ configurator"/>
     <properties key="projectFilePaths" value="voice/sensory_wakeupword/app/sensory_wakeupword.slcp"/>
@@ -13,7 +13,7 @@
     <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
     <properties key="filters" value=""/>
   </descriptors>
-  <descriptors name="sensory_wakeupword" label="Sensory Wakeup Word Demo Application (Series 1)" description="This example project demos wakeup word detection using Sensory's TrulyHandsFree solution for Series 1 boards.&#xA;">
+  <descriptors name="sensory_wakeupword_series_1" label="Sensory Wakeup Word Demo Application (Series 1)" description="This example project demos wakeup word detection using Sensory's TrulyHandsFree (THF) solution for Series 1 boards.&#xA;">
     <properties key="namespace" value="template.uc"/>
     <properties key="keywords" value="universal\ configurator"/>
     <properties key="projectFilePaths" value="voice/sensory_wakeupword/app/sensory_wakeupword_series_1.slcp"/>
