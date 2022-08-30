@@ -36,12 +36,13 @@ class Config:
         if not self.model.is_dir():
             raise ValueError(f"Expected `model` to be a directory but received {self.model}")
         if self.output == "":
-            self.output = self.model.stem
+            raise ValueError(f"Expected `output` to not be an empty string")
+
 
 def create_parser() -> ArgumentParser:
     parser = ArgumentParser('add_model.py', description='Add a new Sensory model to `app/include/model`')
     parser.add_argument('model', type=Path, help='Folder containing the Sensory model to add to this application')
-    parser.add_argument('--output', '-o', type=str, help='The name to assign to the output model. If omitted, this uses the folder name of `model`')
+    parser.add_argument('--output', '-o', type=str, required=True, help='The name to assign to the output model. If omitted, this uses the folder name of `model`')
     parser.add_argument('--force', '-f', action='store_true', help='Flag to allow overwriting an existing model ')
     return parser
 
@@ -110,7 +111,7 @@ def add_model(config: Config) -> Path:
     input_directory = config.model
     if output_directory.exists() and not config.force:
         raise IOError(f"Output directory {models_directory} exists. Use the `-f` flag if you want to overwrite it.")
-    output_directory.mkdir(exist_ok=True)
+    output_directory.mkdir(exist_ok=True, parents=True)
 
 
     search_files = sensory_search_files(input_directory)
