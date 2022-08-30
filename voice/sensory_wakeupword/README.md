@@ -1,6 +1,6 @@
 # Sensory Wake Word Detection Demos
 
-This demo showcases to can use Sensory's [TrulyHandsfree](https://www.sensory.com/wake-word/) (THF) solution for wake word detection to control Silicon Labs boards with your voice. In the provided examples we use different wake works to control on-board LEDs. Several models implementing different wake word phrases are included in this demo. All of these were trained online in just a few clicks through Sensory's platform.
+This demo showcases how to use Sensory's [TrulyHandsfree](https://www.sensory.com/wake-word/) (THF) solution for wake word detection to control Silicon Labs boards with your voice. In the provided examples we use different wake works to control on-board LEDs. Several models implementing different wake word phrases are included in this demo. All of these were trained online in just a few clicks through Sensory's platform.
 
 Pre-built binaries are provided for the Silicon Labs [Thunderboard Sense 2](https://www.silabs.com/development-tools/thunderboard/thunderboard-sense-two-kit) and [EFR32xG24](https://www.silabs.com/development-tools/wireless/efr32xg24-dev-kit) dev kits. The demo can also be built for other Silicon Labs devices that have a mic and at least two LEDs.
 
@@ -190,7 +190,13 @@ In addition, the onboard LEDs are controlled based on which keyword is detected.
 | 3rd                  | Red LED turns on, green LED turns off |
 | 4th                  | Green LED turns on, red LED turns off |
 
-To give an example: If your model has the wakeword phrases `[Sailboats, Airplanes]`, then then a detection of the phrase `Sailboats` would turn both LEDs on, and a detection of the phrase `Airplanes` would turn both LEDs off.
+To give an example, here's an overview of the `hello_gecko` model commands.
+| `hello_gecko` keyword  |  Event                                 |
+|------------------------|----------------------------------------|
+| 1st: *"Hello Gecko"*   |  Green and red LEDs turn on            |
+| 2nd: *"Bye Bye Gecko"* |  Green and red LEDs turn off           |
+| 3rd: *"Gecko Red"*     |  Red LED turns on, green LED turns off |
+| 4th: *"Gecko Green"*   |  Green LED turns on, red LED turns off |
 
 For models that only have one keyword phrase, the LEDs turn off automatically after a short duration.
 
