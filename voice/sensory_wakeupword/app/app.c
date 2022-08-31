@@ -36,8 +36,8 @@
  * - voice_genie: Detects "Voice Genie".
  * - voice_genie_small: A smaller model for detecting "Voice Genie"
  ******************************************************************************/
-#include "model/hello_gecko_small/net.h"
-#include "model/hello_gecko_small/search.h"
+#include "model/hello_gecko/net.h"
+#include "model/hello_gecko/search.h"
 
 /***************************************************************************//**
  * Definitions and local variables.

@@ -31,7 +31,7 @@ slc configuration --gcc-toolchain=<path/to/arm-gnu-gcc-toolchain>
 
 ## Prebuilt binaries
 
-Prebuilt binaries for Silicon Labs' EFR32xG24 Dev Kit and Thunderboard Sense 2 are provided under [`bin/`](bin/). These run with the `hello_gecko_small` model. For details on this model and other available models, see the section on [#Model Selection](#model-selection).
+Prebuilt binaries for Silicon Labs' EFR32xG24 Dev Kit and Thunderboard Sense 2 are provided under [`bin/`](bin/). These run with the `hello_gecko` model. For details on this model and other available models, see the section on [#Model Selection](#model-selection).
 
 You can program your own device with these using [Simplicity Commander](https://www.silabs.com/developers/mcu-programming-options#programming),
 
@@ -53,7 +53,7 @@ Here's a sample output, obtained using `screen` to read from to the USB serial p
 #==============================================#
 #   Core Frequency:              78000000 [Hz] #
 #   Sample rate:                    16000 [Hz] #
-#   Model Name:              hello_gecko_small #
+#   Model Name:                    hello_gecko #
 #==============================================#
 [k=   171] Recognized Hello Gecko   (id=1) with confidence 908
 [k=   306] Recognized Bye Bye Gecko (id=2) with confidence 1950
@@ -172,7 +172,6 @@ There's multiple models to detect different keywords/commands. The model files a
 The available models are,
 
 - `hello_gecko`: Detects "Hello Gecko", "Bye Bye Gecko", "Gecko red" and "Gecko green"
-- `hello_gecko`: A smaller model for detecting "Hello Gecko", "Bye Bye Gecko", "Gecko red" and "Gecko green"
 - `go_silabs`: Detects "Go Silabs".
 - `voice_genie`: Detects "Voice Genie".
 - `voice_genie_small`: A smaller model for detecting "Voice Genie".
@@ -222,8 +221,7 @@ The demo application performs inference periodically every 15ms, and the *Load* 
 
 | Model                | Load [%] | Inference time [ms] |  Approx. model size [kB] |
 |----------------------|----------|---------------------|--------------------------|
-|`hello_gecko`         | 72       | 10.8                |   190                    |
-|`hello_gecko_small`   | 36       | 5.4                 |   83                     |
+|`hello_gecko`         | 36       | 5.4                 |   83                     |
 |`go_silabs`           | 63       | 9.45                |   165                    |
 |`voice_genie`         | 57       | 8.                  |   165                    |
 |`voice_genie_small`   | 26       | 3.9                 |   61                     |
