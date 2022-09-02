@@ -1,10 +1,9 @@
 # Sensory Wake Word Detection Demos
 
-This demo showcases how to use Sensory's [TrulyHandsfree](https://www.sensory.com/wake-word/) (THF) solution for wake word detection to control Silicon Labs boards with your voice. In the provided examples we use different wake works to control on-board LEDs. Several models implementing different wake word phrases are included in this demo. All of these were trained online in just a few clicks through Sensory's platform.
+This demo showcases how to use Sensory's [TrulyHandsfree](https://www.sensory.com/wake-word/) (THF) solution for wake word detection to control Silicon Labs boards with your voice. In the provided examples we use different wake words to control on-board LEDs. Several models implementing different wake word phrases are included in this demo. All of these were trained in just a few clicks through Sensory's VoiceHub.
 
-Pre-built binaries are provided for the Silicon Labs [Thunderboard Sense 2](https://www.silabs.com/development-tools/thunderboard/thunderboard-sense-two-kit) and [EFR32xG24](https://www.silabs.com/development-tools/wireless/efr32xg24-dev-kit) dev kits. The demo can also be built for other Silicon Labs devices that have a mic and at least two LEDs.
-
-You can create you own wake words on Sensory's VoiceHub and update this demo to try them out. See [Creating a New model](#creating-a-new-model) for instructions.
+Pre-built binaries are provided for Silicon Labs' [Thunderboard Sense 2](https://www.silabs.com/development-tools/thunderboard/thunderboard-sense-two-kit) and [EFR32xG24](https://www.silabs.com/development-tools/wireless/efr32xg24-dev-kit). The demo can also be built for other Silicon Labs devices that have a mic and at least two LEDs.
+You can also create you own wake words on Sensory's VoiceHub and update this demo to try them out. See [Creating a New model](#creating-a-new-model) for instructions.
 
 Source code in this repository is adapted from our Embedded World 2022 demo.
 
@@ -15,7 +14,7 @@ To run the prebuilt binaries, you'll need
 - An [EFR32xG24](https://www.silabs.com/development-tools/wireless/efr32xg24-dev-kit) dev kit or a [Thunderboard Sense 2](https://www.silabs.com/development-tools/thunderboard/thunderboard-sense-two-kit) dev kit.
 - `commander` ([Simplicity Commander](https://www.silabs.com/developers/mcu-programming-options#programming)) to flash the binaries onto your device.
 
-To build the source code, you'll need
+To build the source code, you'll need either [Simplicity Studio](https://www.silabs.com/developers/simplicity-studio) or the following command line tools,
 
 - `make`
 - [GNU ARM Embedded Toolchain](https://developer.arm.com/downloads/-/gnu-rm), version 10.3-2021.10 or 10.3-2021.07
@@ -55,10 +54,10 @@ Here's a sample output, obtained using `screen` to read from to the USB serial p
 #   Sample rate:                    16000 [Hz] #
 #   Model Name:                    hello_gecko #
 #==============================================#
-[k=   171] Recognized Hello Gecko   (id=1) with confidence 908
-[k=   306] Recognized Bye Bye Gecko (id=2) with confidence 1950
-[k=   446] Recognized Gecko Red     (id=3) with confidence 2237
-[k=   568] Recognized Gecko Green   (id=4) with confidence 1781
+[k=   128] Recognized Hello Gecko   (id=1) with confidence 93%
+[k=   285] Recognized Bye Bye Gecko (id=2) with confidence 99%
+[k=   538] Recognized Gecko Red     (id=3) with confidence 85%
+[k=   730] Recognized Gecko Green   (id=4) with confidence 99%
 Average Inference Time [% of 15ms]: 36
 ```
 
@@ -75,10 +74,14 @@ To build a new model on Sensory's VoiceHub, follow these steps:
 - You will receive login credentials from a Sensory representative
 - Visit [voicehub.sensory.com](https://voicehub.sensory.com) and setup your account using your login credentials
 - Create a `New Project` for `Wake Word`
-- Type your words, and build the project with Silicon Labs as the target. The model should have at least one and at most 4 keyword phrases.
+- Type your words, and build the project with Silicon Labs as the target. The model should have at least one and at most 4 keyword phrases. What happens when a given keyword is detected is described under [#Model behaviour](#model-behaviour).
 - Once the model is ready, download it by clicking on `Download` and then `Model`. Afterwards, extract the downloaded contents.
 
 ### Adding a model to the project
+
+You can add the new model manually, or by using the provided Python script `scripts/add_model.py`.
+
+#### Adding a model manually
 
 - Under `app/include/model` in this project, create a new directory with your model's name (e.g. `app/include/model/my_wakeword`) and inside this directory create two new files `net.h` and `search.h`.
 - Download the model files , and extract the contents.
@@ -89,7 +92,7 @@ To build a new model on Sensory's VoiceHub, follow these steps:
   - Change `const unsigned short` to `const unsigned short __ALIGNED(4)` in `search.h` and `net.h`. This ensures models are aligned on 4-byte boundaries in memory.
   - Optionally add a `MODEL_NAME` `#define` with a string identifier for your model in `search.h`
 
-You can optionally use the provided Python script `scripts/add_model.py` to automate this. To do so,
+#### Adding a model with the provided script
 
 - In your terminal, navigate to the `sensory_wakeupword` project directory
 - Run `python scripts/add_model.py <path/to/extracted/model> -o <name_for_your_model>`
@@ -180,7 +183,7 @@ The available models are,
 
 Whenever a keyword phrase is detected, the recognition is written out over the serial port using UART.
 
-In addition, the onboard LEDs are controlled based on which keyword is detected.
+In addition, the onboard LEDs are controlled based on which keyword is detected - meaning the keyword ordering matters. The default LED behaviour is described in the table below. You can change this default behaviour by modifying the `process_brick_callback` function in [`app/app.c`](app/app.c).
 
 | Keyword              | Event                                 |
 |----------------------|---------------------------------------|
