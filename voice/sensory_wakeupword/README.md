@@ -1,50 +1,191 @@
 # Sensory Wake Word Detection Demos
 
-This demo showcases how to use Sensory's [TrulyHandsfree](https://www.sensory.com/wake-word/) (THF) solution for wake word detection to control Silicon Labs boards with your voice. In the provided examples we use different wake words to control on-board LEDs. Several models implementing different wake word phrases are included in this demo. All of these were trained in just a few clicks through Sensory's VoiceHub.
+This demo showcases how to use Sensory's [TrulyHandsfree](https://www.sensory.com/wake-word/) (THF) solution for wake word detection to control Silicon Labs boards with your voice. In the provided examples we use different wake words to control on-board LEDs. Several models implementing different wake word phrases are included in this demo. All of these models were developed in just a few clicks through Sensory's VoiceHub.
 
 Pre-built binaries are provided for Silicon Labs' [Thunderboard Sense 2](https://www.silabs.com/development-tools/thunderboard/thunderboard-sense-two-kit) and [EFR32xG24](https://www.silabs.com/development-tools/wireless/efr32xg24-dev-kit). The demo can also be built for other Silicon Labs devices that have a mic and at least two LEDs.
 You can also create you own wake words on Sensory's VoiceHub and update this demo to try them out. See [Creating a New model](#creating-a-new-model) for instructions.
 
 Source code in this repository is adapted from our Embedded World 2022 demo.
 
-## Prerequisites
+## Building and running the demo
 
-To run the prebuilt binaries, you'll need
+You can build and run this demo using either [Simplicity Studio](https://www.silabs.com/developers/simplicity-studio) or through a command line interface. If you don't have Simplicity Studio installed, feel free to skip to the section on [#Command line tools](#command-line-tools).
 
-- An [EFR32xG24](https://www.silabs.com/development-tools/wireless/efr32xg24-dev-kit) dev kit or a [Thunderboard Sense 2](https://www.silabs.com/development-tools/thunderboard/thunderboard-sense-two-kit) dev kit.
-- `commander` ([Simplicity Commander](https://www.silabs.com/developers/mcu-programming-options#programming)) to flash the binaries onto your device.
+### Simplicity Studio
 
-To build the source code, you'll need either [Simplicity Studio](https://www.silabs.com/developers/simplicity-studio) or the following command line tools,
+To build and run the demo for your board using Simplicity Studio, you will need to:
 
-- `make`
-- [GNU ARM Embedded Toolchain](https://developer.arm.com/downloads/-/gnu-rm), version 10.3-2021.10 or 10.3-2021.07
-- `slc` ([Silicon Labs Configurator](https://www.silabs.com/documents/public/user-guides/ug520-software-project-generation-configuration-with-slc-cli.pdf)) for project generation. Installation instructions can be found under Section 2 in the provided link.
-- [Gecko SDK >= v4.1](https://github.com/SiliconLabs/gecko_sdk)
+1. Add this Git repository as an external repository in Simplicity Studio
+2. Create a new project for your board using the Simplicity Studio Launcher
+3. Build the code and flash it onto your device using the Simplicity Studio IDE
 
-To configure `slc` to use the Gecko SDK and ARM GNU Embedded Toolchain you downloaded, run
+#### Simplicity Studio: Adding an external repository
+
+Simplicity Studio can search for project templates in external repositories. To add an external repository,
+
+1. Open Simplicity Studio
+2. Open the Preferences view (the cogwheel at the top of the window)
+3. Select `Simplicity Studio`→`External Repos`
+4. Click on `Add...` and configure a new external repository with the following settings
+    - **Name**: Machine Learning Applications on GitHub
+    - **URI**:  <https://github.com/SiliconLabs/machine_learning_applications.git>
+
+*Note: If `External Repos` doesn't show up, you might be missing the 32-bit and Wireless MCUs package for Studio. You can install this by opening the Install view (the arrow at the top of the window) and selecting `Install by technology type`.*
+
+#### Simplicity Studio: Building the Sensory Wakeup Word demo
+
+After adding the external repository, you can generate a new project based the project templates provided by this demo. These templates are named
+
+- `Machine Learning - Sensory Wakeup Word (Series 1)` (for Series 1 devices such as the Thunderboard Sense 2 Dev Kit) and
+
+- `Machine Learning - Sensory Wakeup Word (Series 2)` (for Series 2 devices such as the EFR32xG24 Dev Kit).
+
+To generate a project targeting your device,
+
+1. Open the Simplicity Studio Launcher (the rocket button in the top right corner of the window)
+2. Connect your device (e.g. an EFR32xG24 Dev Kit, Thunderboard Sense 2 Dev Kit, or any other Silicon Labs device with a mic and at least two LEDs)
+3. Choose your device in the Connected Devices dropdown, and click on `Start`
+4. Navigate to `Example Projects & Demos`. Then, in the context menu on the left, scroll down to `Capability`, and select `Machine Learning`.
+5. Locate the `Machine Learning - Sensory Wakeup Word (Series 1|2)` example project and click on `Create`. You can leave the project configuration settings to their defaults, and click on `Finish` to set up the project for your board.
+6. Inside your project, you can then compile the code and run it on your board by clicking on `Run`→`Debug` in the window context menu and selecting your connected board.
+
+Now that the project is set up, proceed to the section on [#Making changes to the demo](#making-changes-to-the-demo) for instructions on how to create your own model and run it on your device.
+
+### Command line tools
+
+To build and run the demo for your board through a CLI, you will need to:
+
+- Install the prerequisites
+- Generate a project for your board using Silicon Labs Configurator
+- Build the project using Make and flash it onto your device using Simplicity Commander
+
+#### Command line tools: Installing the prerequisites
+
+To flash binaries onto your device, you'll need
+
+- `commander` ([Simplicity Commander](https://www.silabs.com/developers/mcu-programming-options#programming))
+
+To generate and build the project, you'll need
+
+- `make` (for Windows we recommend using WSL or Cygwin)
+- `arm-eabi-none` GNU toolchain ([GNU ARM Embedded Toolchain](https://developer.arm.com/downloads/-/gnu-rm), version 10.3-2021.10 or 10.3-2021.07)
+- `slc` ([Silicon Labs Configurator](https://www.silabs.com/documents/public/user-guides/ug520-software-project-generation-configuration-with-slc-cli.pdf), installation instructions can be found under Section 2 in the provided link)
+- `git`
+
+After installing the tools, make sure that they are available in your `PATH`.
+
+Then, download `Gecko SDK >= v4.1`. You can obtain this from the Github repository [SiliconLabs/gecko_sdk](https://github.com/SiliconLabs/gecko_sdk).
+
+```sh
+git clone https://github.com/SiliconLabs/gecko_sdk
+cd gecko_sdk
+git checkout v4.1.0
+```
+
+After this, configure `slc` to use the Gecko SDK and ARM GNU Embedded Toolchain you downloaded,
 
 ```sh
 slc configuration --sdk=<path/to/gecko_sdk>
 slc configuration --gcc-toolchain=<path/to/arm-gnu-gcc-toolchain>
+slc signature trust --sdk=<path/to/gecko_sdk>
 ```
 
-## Prebuilt binaries
-
-Prebuilt binaries for Silicon Labs' EFR32xG24 Dev Kit and Thunderboard Sense 2 are provided under [`bin/`](bin/). These run with the `hello_gecko` model. For details on this model and other available models, see the section on [#Model Selection](#model-selection).
-
-You can program your own device with these using [Simplicity Commander](https://www.silabs.com/developers/mcu-programming-options#programming),
+Lastly, clone this repository.
 
 ```sh
-# Assuming you've connected a EFR32xG24 Dev Kit
-# to your machine over USB,
-commander flash bin/efr32xg24_dev_kit/sensory_wakeupword.s37
-# Note: If you encounter issues when flashing,
-# try running `commander device recover` first.
+git clone https://github.com/SiliconLabs/machine_learning_applications
 ```
 
-### Example output
+#### Command line tools: Flashing binaries
 
-Here's a sample output, obtained using `screen` to read from to the USB serial port where an EFR32xG24 running this demo was connected.
+If you have an EFR32xG24 Dev Kit or Thunderboard Sense 2 you can run the provided prebuilt binaries, which are located under [`bin/`](bin/). These run with the default `hello_gecko` model. For details on this model and other available models, see the section on [#Making changes to the demo](#making-changes-to-the-demo).
+
+You can program your own device with these using `commander`,
+
+```sh
+# in sensory_wakeupword/
+
+# Assuming you've connected a EFR32xG24 Dev Kit to your machine over USB,
+commander flash bin/efr32xg24_dev_kit/sensory_wakeupword.s37
+# Note: If you encounter issues when flashing, try running `commander device recover` first.
+```
+
+#### Command line tools: Building the Sensory Wakeup Word demo
+
+This section shows how to generate and build the demo for a Series 2 board, using the EFR32xG24 Dev Kit (BRD2601B) as an example.
+
+First, generate a project targeting your device,
+
+```sh
+# in sensory_wakeupword/
+slc generate app/sensory_wakeupword.slcp --with brd2601b -d target/brd2601b
+```
+
+Then, build the project using `make`,
+
+```sh
+# in sensory_wakeupword/
+cd target/brd2601b
+make -f sensory_wakeupword.Makefile -j
+```
+
+The compiled code can then be found under `target/brd2601b/build/debug`, and can be flashed onto your board as described in the section  [#Command line tools: Flashing binaries](#command-line-tools-flashing-binaries).
+
+For instructions on how to create a new model and run it on your device, proceed to the section on [#Making changes to the demo](#making-changes-to-the-demo).
+
+##### Building for Series 1 boards
+
+Follow the same instructions as above, but use the `sensory_wakeupword_series_1.slcp` project file and target a Series 1 board (e.g. BRD4166A) instead.
+
+## Making changes to the demo
+
+### Model selection
+
+We provide multiple models to detect different keywords/commands. The model files are located under [`include/model/<model>`](include/model) in the project. To choose between them, change the model configuration `#include` paths in [`app/app.c`](app/app.c),
+
+```patch
+-#include "model/hello_gecko/net.h"
+-#include "model/hello_gecko/search.h"
++#include "model/go_silabs/net.h"
++#include "model/go_silabs/search.h"
+```
+
+The available models are,
+
+- `hello_gecko`: Detects "Hello Gecko", "Bye Bye Gecko", "Gecko red" and "Gecko green"
+- `go_silabs`: Detects "Go Silabs".
+- `voice_genie`: Detects "Voice Genie".
+- `voice_genie_small`: A smaller model for detecting "Voice Genie".
+
+### Model behaviour
+
+Whenever a keyword phrase is detected, the recognition is written out over the UART serial port.
+
+In addition, the onboard LEDs are controlled based on which keyword is detected - meaning the keyword ordering matters. The default mapping from keywords to LED behaviour is described in the table below. You can change this by modifying the `process_brick_callback` function in [`app/app.c`](app/app.c).
+
+| Keyword              | Event                                 |
+|----------------------|---------------------------------------|
+| 1st                  | Green and red LEDs turn on            |
+| 2nd                  | Green and red LEDs turn off           |
+| 3rd                  | Red LED turns on, green LED turns off |
+| 4th                  | Green LED turns on, red LED turns off |
+
+For models with $n<4$ keywords, only the $n$ first keyword recognition events can occur. If the model only has a single keyword phrase, the LEDs turn off automatically a short while after a recognition.
+
+#### Example output for the `hello_gecko` model
+
+After compiling the demo with the `hello_gecko` model and flashing it onto your device, try uttering the phrases `Hello Gecko`, `Bye Bye Gecko`, `Gecko Red` and `Gecko Green`.
+
+These phrases should map to the following behaviour:
+
+| `hello_gecko` keyword  |  Event                                 |
+|------------------------|----------------------------------------|
+| 1st: *"Hello Gecko"*   |  Green and red LEDs turn on            |
+| 2nd: *"Bye Bye Gecko"* |  Green and red LEDs turn off           |
+| 3rd: *"Gecko Red"*     |  Red LED turns on, green LED turns off |
+| 4th: *"Gecko Green"*   |  Green LED turns on, red LED turns off |
+
+In addition, if you read from the USB serial port where your device is connected (e.g. using `screen`), you should see an output similar to what's shown below.
 
 ```txt
 #==============================================#
@@ -61,11 +202,11 @@ Here's a sample output, obtained using `screen` to read from to the USB serial p
 Average Inference Time [% of 15ms]: 36
 ```
 
-## Creating a new model
+### Creating a new model
 
 To create a new model for this demo, you will need to *i)* build it on Sensory's VoiceHub, and *ii)* add it to the demo project.
 
-### Building a model on VoiceHub
+#### Building a model on VoiceHub
 
 To build a new model on Sensory's VoiceHub, follow these steps:
 
@@ -77,11 +218,11 @@ To build a new model on Sensory's VoiceHub, follow these steps:
 - Type your words, and build the project with Silicon Labs as the target. The model should have at least one and at most 4 keyword phrases. What happens when a given keyword is detected is described under [#Model behaviour](#model-behaviour).
 - Once the model is ready, download it by clicking on `Download` and then `Model`. Afterwards, extract the downloaded contents.
 
-### Adding a model to the project
+#### Adding a model to the project
 
-You can add the new model manually, or by using the provided Python script `scripts/add_model.py`.
+You can add the new model manually, or automatically (which requires `python`)
 
-#### Adding a model manually
+##### Manually adding your model
 
 - Under `app/include/model` in this project, create a new directory with your model's name (e.g. `app/include/model/my_wakeword`) and inside this directory create two new files `net.h` and `search.h`.
 - Download the model files , and extract the contents.
@@ -92,131 +233,34 @@ You can add the new model manually, or by using the provided Python script `scri
   - Change `const unsigned short` to `const unsigned short __ALIGNED(4)` in `search.h` and `net.h`. This ensures models are aligned on 4-byte boundaries in memory.
   - Optionally add a `MODEL_NAME` `#define` with a string identifier for your model in `search.h`
 
-#### Adding a model with the provided script
+##### Automatically adding your model
 
-- In your terminal, navigate to the `sensory_wakeupword` project directory
-- Run `python scripts/add_model.py <path/to/extracted/model> -o <name_for_your_model>`
+If you've cloned this Git repository and are building with the command line tools, you can use the provided Python script `scripts/add_model.py` to automate adding new model files to your project.
+
+```sh
+# in sensory_wakeupword/
+python scripts/add_model.py <path/to/extracted/model> -o <name_for_your_model>
+```
 
 Then, you can use this model in the project by changing the `#include` statements in [`app/app.c`](app/app.c) as described in the section on [Model selection](#model-selection).
 
-## Building
+## Implementation notes
 
-To build the demo for another Silicon Labs board, you will need to:
-
-1. Generate a project for your board based on the demo application. You can do this by importing it into [Simplicity Studio](https://www.silabs.com/developers/simplicity-studio) or by using [Silicon Labs Configurator (SLC)](https://www.silabs.com/documents/public/user-guides/ug520-software-project-generation-configuration-with-slc-cli.pdf) and command line tools.
-2. Cross-compile for your target device
-
-### Building with Simplicity Studio
-
-This section shows how you can generate and build the demo for your board using Simplicity Studio. To to so, you will need to:
-
-1. Add this Git repository as an external repository in Simplicity Studio
-2. Create a new project using the Simplicity Studio Launcher
-
-#### Adding an external repository to Simplicity Studio
-
-Simplicity Studio can be configured to search for demos and project templates in external repositories. To add an external repository,
-
-1. Open Simplicity Studio
-2. Open the Preferences view (the cogwheel at the top of the window)
-3. Select `Simplicity Studio`→`External Repos`
-4. Click on `Add...` and configure a new external repository with the following settings
-    - **Name**: Machine Learning Applications on GitHub
-    - **URI**:  <https://github.com/SiliconLabs/machine_learning_applications.git>
-5. Select the newly added external repository and click on `Update...`
-6. The Sensory Wakeup Word demo application should now be visible under `Example Projects & Demos` in the Simplicity Studio launcher when configuring new projects for EFR32xG24 Dev Kits (BRD2601B) and Thunderboard Sense 2 Dev Kits (BRD4166A).
-
-#### Setting up the Sensory Wakeup Word demo in Simplicity Studio
-
-You can then choose this demo as a template when generating a project through Simplicity Studio's launcher.
-
-1. Open the Simplicity Studio Launcher (the rocket button in the top right corner of the window)
-2. Connect your EFR32xG24 Dev Kit or Thunderboard Sense 2
-3. Choose your device in the Connected Devices dropdown, and click on `Start`
-4. Navigate to `Example Projects & Demos`. In the context menu on the left, scroll down to `Provider`, and select `Machine Learning Applications on GitHub`.
-5. Locate the `Sensory Wakeup Word Demo Application (Series 1|2)` application and click on `Create`. You can leave the project conifguration settings to their defaults, and click on `Finish` to set up the project for your board.
-6. Inside your project, you can compile the code and run it on your board by clicking on `Run`→`Debug` in the window context menu and selecting your connected board.
-
-### Building with command line tools
-
-This section shows how to generate and build the demo for a Series 2 board, using BRD2601B (EFR32xG24 Dev Kit) as an example. We're using SLC here, but you can also import the demo project into Simplicity Studio by selecting the `.slcp` project file.
-
-First, generate a project targeting your device,
-
-```sh
-slc generate app/sensory_wakeupword.slcp --with brd2601b -d target/brd2601b
-```
-
-Then, build the project using `make`,
-
-```sh
-cd target/brd2601b
-make -f sensory_wakeupword.Makefile -j
-```
-
-The compiled code can then be found under `target/brd2601b/build/debug`, and can be flashed onto your board as described in the section covering [#Prebuilt Binaries](#prebuilt-binaries).
-
-### Building for Series 1 boards
-
-Follow the same instructions as above, but use the `sensory_wakeupword_series_1.slcp` project file and target a Series 1 board (e.g. BRD4166A) instead.
-
-### Model selection
-
-There's multiple models to detect different keywords/commands. The model files are located under [`include/model/<model>`](include/model). To choose between them, you can change the model configuration `#include` paths in [`app/app.c`](app/app.c) at line 50,
-
-```c
--#include "model/hello_gecko/net.h"
--#include "model/hello_gecko/search.h"
-
-+#include "model/go_silabs/net.h"
-+#include "model/go_silabs/search.h"
-```
-
-The available models are,
-
-- `hello_gecko`: Detects "Hello Gecko", "Bye Bye Gecko", "Gecko red" and "Gecko green"
-- `go_silabs`: Detects "Go Silabs".
-- `voice_genie`: Detects "Voice Genie".
-- `voice_genie_small`: A smaller model for detecting "Voice Genie".
-
-#### Model behaviour
-
-Whenever a keyword phrase is detected, the recognition is written out over the serial port using UART.
-
-In addition, the onboard LEDs are controlled based on which keyword is detected - meaning the keyword ordering matters. The default LED behaviour is described in the table below. You can change this default behaviour by modifying the `process_brick_callback` function in [`app/app.c`](app/app.c).
-
-| Keyword              | Event                                 |
-|----------------------|---------------------------------------|
-| 1st                  | Green and red LEDs turn on            |
-| 2nd                  | Green and red LEDs turn off           |
-| 3rd                  | Red LED turns on, green LED turns off |
-| 4th                  | Green LED turns on, red LED turns off |
-
-To give an example, here's an overview of the `hello_gecko` model commands.
-| `hello_gecko` keyword  |  Event                                 |
-|------------------------|----------------------------------------|
-| 1st: *"Hello Gecko"*   |  Green and red LEDs turn on            |
-| 2nd: *"Bye Bye Gecko"* |  Green and red LEDs turn off           |
-| 3rd: *"Gecko Red"*     |  Red LED turns on, green LED turns off |
-| 4th: *"Gecko Green"*   |  Green LED turns on, red LED turns off |
-
-For models that only have one keyword phrase, the LEDs turn off automatically after a short duration.
-
-### Quick Note: Series 1 and Series 2 boards
+### Series 1 and Series 2 boards
 
 There are a couple of differences between builds for Series 1 and Series 2 boards which are described in the following two sections.
 
 #### Floating point ABI
 
-The demo code links against precompiled libraries from Sensory. These libraries use floating point arithmetic. Due to differences in how apps targeting Series 1 boards and Series 2 boards compile floating point code, we link against separate static libraries when compiling the app for Series 1 and Series 2. Specifically, Series 1 uses `softfp` floating point ABI and Series 2 uses `hard` floating point ABI.
+The demo code links against precompiled libraries from Sensory located under `app/lib/`. These libraries use floating point arithmetic. Due to differences in how apps targeting Series 1 boards and Series 2 boards compile floating point code, we link against separate static libraries when compiling the app for Series 1 and Series 2 devices. Specifically, Series 1 uses `softfp` floating point ABI and Series 2 uses `hard` floating point ABI.
 
 For more details on floating point ABIs, check out [this page](https://embeddedartistry.com/blog/2017/10/11/demystifying-arm-floating-point-compiler-options/).
 
 #### Clock frequency
 
-Series 2 boards support scaling up the CPU core frequency using the `device_init_dpll` GSDK component. To increase the throughput when running on Series 2 boards, we pull in the `device_init_dpll` component in the corresponding project file. For EFR32xG24, this enables running at 78Mhz instead of 39MHz
+Series 2 boards support scaling up the CPU core frequency using the `device_init_dpll` GSDK component. To increase the throughput when running on Series 2 boards, we pull in the `device_init_dpll` component in the corresponding project file. For EFR32xG24, this enables running at 78Mhz instead of 39MHz.
 
-## Performance
+### Performance
 
 Below you can find performance numbers recorded using EFR32xG24 with a 78MHz CPU core frequency.
 
@@ -225,7 +269,7 @@ The demo application performs inference periodically every 15ms, and the *Load* 
 | Model                | Load [%] | Inference time [ms] |  Approx. model size [kB] |
 |----------------------|----------|---------------------|--------------------------|
 |`hello_gecko`         | 36       | 5.4                 |   83                     |
-|`go_silabs`           | 63       | 9.45                |   165                    |
+|`go_silabs`           | 26       | 3.9                |   83                     |
 |`voice_genie`         | 57       | 8.                  |   165                    |
 |`voice_genie_small`   | 26       | 3.9                 |   61                     |
 
