@@ -135,7 +135,7 @@ First, generate a project targeting your device,
 
 ```sh
 # in sensory_wakeupword/
-slc generate app/sensory_wakeupword.slcp --with brd2601b -d target/brd2601b
+slc generate app/sensory_wakeupword_series_2.slcp --with brd2601b -d target/brd2601b
 ```
 
 Then, build the project using `make`,
