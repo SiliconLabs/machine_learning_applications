@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<demos xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.silabs.com/ss/Demo.ecore">
+  <demo name="brd2601b.demo.sensory_wakeupword" label="Machine Learning - Sensory Wakeup Word Demo">
+    <property key="demos.blurb" value="Machine Learning - Sensory Wakeup Word Demo"/>
+    <property key="core.partCompatibility" value=".*"/>
+    <property key="core.boardCompatibility" value="brd2601b"/>
+    <property key="demos.imageFile" value="voice/sensory_wakeupword/bin/efr32xg24_dev_kit/sensory_wakeupword.s37"/>
+    <property key="core.readmeFiles" value="voice/sensory_wakeupword/README.md"/>
+    <property key="core.quality" value="EXPERIMENTAL"/>
+    <properties key="filters" value="Capability|Machine\ Learning Device\ Type|SoC MCU|32-bit\ MCU Project\ Difficulty|Beginner"/>
+    <description>This precompiled application demos wakeup word detection using Sensory's TrulyHandsFree (THF) solution on the EFR32xG24 Dev Kit.
+The application recognizes the spoken phrases "Hello Gecko", "Bye Bye Gecko", "Gecko Red" and "Gecko Green", and recognitions are used to control the on-board LEDs.</description>
+   </demo>
+  <demo name="brd4166a.demo.sensory_wakeupword" label="Machine Learning - Sensory Wakeup Word Demo">
+    <property key="demos.blurb" value="Machine Learning - Sensory Wakeup Word Demo"/>
+    <property key="core.partCompatibility" value=".*"/>
+    <property key="core.boardCompatibility" value="brd4166a"/>
+    <property key="demos.imageFile" value="voice/sensory_wakeupword/bin/thunderboard_sense_2/sensory_wakeupword.s37"/>
+    <property key="core.readmeFiles" value="voice/sensory_wakeupword/README.md"/>
+    <property key="core.quality" value="EXPERIMENTAL"/>
+    <properties key="filters" value="Capability|Machine\ Learning Device\ Type|SoC MCU|32-bit\ MCU Project\ Difficulty|Beginner"/>
+    <description>This precompiled application demos wakeup word detection using Sensory's TrulyHandsFree (THF) solution on the Thunderboard Sense 2.
+The application recognizes the spoken phrases "Hello Gecko", "Bye Bye Gecko", "Gecko Red" and "Gecko Green", and recognitions are used to control the on-board LEDs.</description>
+   </demo>
+</demos>

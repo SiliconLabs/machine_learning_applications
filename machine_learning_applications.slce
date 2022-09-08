@@ -1,0 +1,8 @@
+id: machine_learning_applications
+label: Machine Learning Applications
+description: SDK extension for applications that leverage machine learning.
+version: "1.0.0"
+sdk:
+  id: gecko_sdk
+  version: "4.1.0"
+component_path: []

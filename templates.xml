@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><model:MDescriptors xmlns:model="http://www.silabs.com/ss/Studio.ecore">
-  <descriptors name="sensory_wakeupword_series_2" label="Machine Learning - Sensory Wakeup Word (Series 2)" description=" This example project demos wakeup word detection using Sensory's TrulyHandsFree (THF) solution for Series 2 boards.&#xA;">
+  <descriptors name="sensory_wakeupword_series_2" label="Machine Learning - Sensory Wakeup Word" description="This example project demos wakeup word detection using Sensory's TrulyHandsFree (THF) solution for Series 2 boards. Several models implementing different wake word phrases are included in the provided example projects. .&#xA;">
     <properties key="namespace" value="template.uc"/>
     <properties key="keywords" value="universal\ configurator"/>
     <properties key="projectFilePaths" value="voice/sensory_wakeupword/app/sensory_wakeupword.slcp"/>
@@ -13,7 +13,7 @@
     <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
     <properties key="filters" value="Capability|Machine\ Learning Device\ Type|SoC MCU|32-bit\ MCU Project\ Difficulty|Advanced"/>
   </descriptors>
-  <descriptors name="sensory_wakeupword_series_1" label="Machine Learning - Sensory Wakeup Word (Series 1)" description="This example project demos wakeup word detection using Sensory's TrulyHandsFree (THF) solution for Series 1 boards.&#xA;">
+  <descriptors name="sensory_wakeupword_series_1" label="Machine Learning - Sensory Wakeup Word" description="This example project demos wakeup word detection using Sensory's TrulyHandsFree (THF) solution for Series 1 boards. The project includes multiple models for recognizing different wakeup word phrases, and also supports adding your own custom Sensory wakeup word model.&#xA;">
     <properties key="namespace" value="template.uc"/>
     <properties key="keywords" value="universal\ configurator"/>
     <properties key="projectFilePaths" value="voice/sensory_wakeupword/app/sensory_wakeupword_series_1.slcp"/>
