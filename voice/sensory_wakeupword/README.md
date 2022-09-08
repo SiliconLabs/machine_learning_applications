@@ -1,53 +1,68 @@
-# Sensory Wake Word Detection Demos
+# Sensory Wake Word Detection
 
-This demo showcases how to use Sensory's [TrulyHandsfree](https://www.sensory.com/wake-word/) (THF) solution for wake word detection to control Silicon Labs boards with your voice. In the provided examples we use different wake words to control on-board LEDs. Several models implementing different wake word phrases are included in this demo. All of these models were developed in just a few clicks through Sensory's VoiceHub.
+This demo showcases how to use Sensory's [TrulyHandsfree](https://www.sensory.com/wake-word/) (THF) solution for wake word detection to control Silicon Labs boards with your voice. In the provided examples we use different wake words to control on-board LEDs. Several models implementing different wake word phrases are included in the provided example projects. All of these models were developed in just a few clicks through Sensory's VoiceHub.
 
 Pre-built binaries are provided for Silicon Labs' [Thunderboard Sense 2](https://www.silabs.com/development-tools/thunderboard/thunderboard-sense-two-kit) and [EFR32xG24](https://www.silabs.com/development-tools/wireless/efr32xg24-dev-kit). The demo can also be built for other Silicon Labs devices that have a mic and at least two LEDs.
-You can also create you own wake words on Sensory's VoiceHub and update this demo to try them out. See [Creating a New model](#creating-a-new-model) for instructions.
-
-Source code in this repository is adapted from our Embedded World 2022 demo.
+You can also create you own wake word model on Sensory's VoiceHub and include it in this demo to try it out. See [#Creating a New model](#creating-a-new-model) for instructions.
 
 ## Building and running the demo
 
-You can build and run this demo using either [Simplicity Studio](https://www.silabs.com/developers/simplicity-studio) or through a command line interface. If you don't have Simplicity Studio installed, feel free to skip to the section on [#Command line tools](#command-line-tools).
+You can build and run this demo using either Simplicity Studio or through a command line interface. If you don't have Simplicity Studio installed, feel free to skip to the section on [#Command line tools](#command-line-tools).
 
 ### Simplicity Studio
 
 To build and run the demo for your board using Simplicity Studio, you will need to:
 
-1. Add this Git repository as an external repository in Simplicity Studio
+1. Add this Git repository as a Gecko SDK extension in Simplicity Studio
 2. Create a new project for your board using the Simplicity Studio Launcher
 3. Build the code and flash it onto your device using the Simplicity Studio IDE
 
 #### Simplicity Studio: Adding an external repository
 
-Simplicity Studio can search for project templates in external repositories. To add an external repository,
+Simplicity Studio supports adding Gecko SDK extensions which provide new project templates, prebuilt demos and software components. To add this repository as an SDK extension,
 
-1. Open Simplicity Studio
-2. Open the Preferences view (the cogwheel at the top of the window)
-3. Select `Simplicity Studio`→`External Repos`
-4. Click on `Add...` and configure a new external repository with the following settings
-    - **Name**: Machine Learning Applications on GitHub
-    - **URI**:  <https://github.com/SiliconLabs/machine_learning_applications.git>
+1. Download the code, either by
+   - Cloning the repository using `git`:
 
-*Note: If `External Repos` doesn't show up, you might be missing the 32-bit and Wireless MCUs package for Studio. You can install this by opening the Install view (the arrow at the top of the window) and selecting `Install by technology type`.*
+      ```sh
+      git clone https://github.com/SiliconLabs/machine_learning_applications.git
+      ```
 
-#### Simplicity Studio: Building the Sensory Wakeup Word demo
+   - Or navigating to <https://github.com/SiliconLabs/machine_learning_applications.git>, opening the green `Code` dropdown, selecting `Download ZIP`, and extracting the contents.
+2. Open Simplicity Studio
+3. Open the Preferences view in Simplicity Studio (the cogwheel at the top of the window)
+4. Select `Simplicity Studio`→`SDKs`
+5. Select your Gecko SDK Suite, then click on `Add Extension...`.
+6. In the menu, click on `Browse` and point to the root directory of the downloaded repository. Select `Machine Learning Applications` and click on `OK` to add the extension, then click on `Trust` to trust the contents.
+7. Click `Apply and Close` to exit the preferences menu.
 
-After adding the external repository, you can generate a new project based the project templates provided by this demo. These templates are named
+*Note: If `Simplicity Studio`→`SDKs` doesn't show up, you might be missing the 32-bit and Wireless MCUs package for Studio. You can install this by opening the Install view (the arrow at the top of the window) and selecting `Install by technology type`.*
 
-- `Machine Learning - Sensory Wakeup Word (Series 1)` (for Series 1 devices such as the Thunderboard Sense 2 Dev Kit) and
+#### Simplicity Studio: Flashing the demo
 
-- `Machine Learning - Sensory Wakeup Word (Series 2)` (for Series 2 devices such as the EFR32xG24 Dev Kit).
+If you have an EFR32xG24 Dev Kit or Thunderboard Sense 2 you can run the prebuilt demo binaries from the Simplicity Studio Launcher. These are compiled with the default `hello_gecko` model. For details on this model and other available models, see the section on [#Making changes to the demo](#making-changes-to-the-demo).
 
-To generate a project targeting your device,
+To flash the prebuilt demo onto your device,
 
 1. Open the Simplicity Studio Launcher (the rocket button in the top right corner of the window)
 2. Connect your device (e.g. an EFR32xG24 Dev Kit, Thunderboard Sense 2 Dev Kit, or any other Silicon Labs device with a mic and at least two LEDs)
 3. Choose your device in the Connected Devices dropdown, and click on `Start`
 4. Navigate to `Example Projects & Demos`. Then, in the context menu on the left, scroll down to `Capability`, and select `Machine Learning`.
-5. Locate the `Machine Learning - Sensory Wakeup Word (Series 1|2)` example project and click on `Create`. You can leave the project configuration settings to their defaults, and click on `Finish` to set up the project for your board.
-6. Inside your project, you can then compile the code and run it on your board by clicking on `Run`→`Debug` in the window context menu and selecting your connected board.
+5. Locate the `Machine Learning - Sensory Wakeup Word Demo` application, and click on `Run`.
+6. Try saying "Hello Gecko" to your device, and the LEDs should light up. For more information on the expected behaviour, see the section on [#Example output for the `hello_gecko` model](#example-output-for-the-hello_gecko-model)
+
+#### Simplicity Studio: Building the Sensory Wakeup Word project
+
+If you want to make changes to the demo, you can generate a new project based the project template provided by this repository as follows:
+
+1. Open the Simplicity Studio Launcher (the rocket button in the top right corner of the window)
+2. Connect your device (e.g. an EFR32xG24 Dev Kit, Thunderboard Sense 2 Dev Kit, or any other Silicon Labs device with a mic and at least two LEDs)
+3. Choose your device in the Connected Devices dropdown, and click on `Start`
+4. Navigate to `Example Projects & Demos`. Then, in the context menu on the left, scroll down to `Capability`, and select `Machine Learning`.
+5. Locate the `Machine Learning - Sensory Wakeup Word` example project and click on `Create`. You can leave the settings to their defaults, and click on `Finish` to set up the project for your board.
+6. Inside your project, you can then compile and run the code from the windows context menu:
+   - Click on `Project`→`Build Project` to compile the code
+   - Click on `Run`→`Debug` and select your connected device to run the code
 
 Now that the project is set up, proceed to the section on [#Making changes to the demo](#making-changes-to-the-demo) for instructions on how to create your own model and run it on your device.
 
@@ -96,9 +111,9 @@ Lastly, clone this repository.
 git clone https://github.com/SiliconLabs/machine_learning_applications
 ```
 
-#### Command line tools: Flashing binaries
+#### Command line tools: Flashing the demo
 
-If you have an EFR32xG24 Dev Kit or Thunderboard Sense 2 you can run the provided prebuilt binaries, which are located under [`bin/`](bin/). These run with the default `hello_gecko` model. For details on this model and other available models, see the section on [#Making changes to the demo](#making-changes-to-the-demo).
+If you have an EFR32xG24 Dev Kit or Thunderboard Sense 2 you can run the provided prebuilt binaries, which are located under `bin/`. These run with the default `hello_gecko` model. For details on this model and other available models, see the section on [#Making changes to the demo](#making-changes-to-the-demo).
 
 You can program your own device with these using `commander`,
 
@@ -110,9 +125,11 @@ commander flash bin/efr32xg24_dev_kit/sensory_wakeupword.s37
 # Note: If you encounter issues when flashing, try running `commander device recover` first.
 ```
 
+Try saying "Hello Gecko" to your device, and the LEDs should light up. For more information on the expected behaviour, see the section on [#Example output for the `hello_gecko` model](#example-output-for-the-hello_gecko-model)
+
 #### Command line tools: Building the Sensory Wakeup Word demo
 
-This section shows how to generate and build the demo for a Series 2 board, using the EFR32xG24 Dev Kit (BRD2601B) as an example.
+If you want to make changes to the demo, you can generate a new project based the project template provided by this repository using Simplicity Commander. This section documents this procedure using the EFR32xG24 Dev Kit (BRD2601B) as an example.
 
 First, generate a project targeting your device,
 
@@ -129,7 +146,7 @@ cd target/brd2601b
 make -f sensory_wakeupword.Makefile -j
 ```
 
-The compiled code can then be found under `target/brd2601b/build/debug`, and can be flashed onto your board as described in the section  [#Command line tools: Flashing binaries](#command-line-tools-flashing-binaries).
+The compiled code can then be found under `target/brd2601b/build/debug`, and can be flashed onto your board as described in the section [#Command line tools: Flashing the demo](#command-line-tools-flashing-the-demo).
 
 For instructions on how to create a new model and run it on your device, proceed to the section on [#Making changes to the demo](#making-changes-to-the-demo).
 
