@@ -16,8 +16,6 @@ include:
       - path: model/go_silabs/search.h
       - path: model/hello_gecko/net.h
       - path: model/hello_gecko/search.h
-      - path: model/hello_gecko_small/net.h
-      - path: model/hello_gecko_small/search.h
       - path: model/voice_genie/net.h
       - path: model/voice_genie/search.h
       - path: model/voice_genie_small/net.h
