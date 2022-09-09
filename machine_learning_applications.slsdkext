@@ -1,0 +1,8 @@
+# This files lists Studio SDK properties for the machine_learning_applications repository.
+id=com.silabs.extension.ml.applications
+label=Machine Learning Applications
+description=This plugin provides applications that demonstrate machine learning inference on Silicon Labs boards.
+version=1.0.0
+dependantSdkVersion=4.1.0
+prop.file.templatesFile=templates.xml
+prop.file.demosFile=demos.xml

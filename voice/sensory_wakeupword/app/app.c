@@ -38,7 +38,6 @@
  ******************************************************************************/
 #include "model/hello_gecko/net.h"
 #include "model/hello_gecko/search.h"
-#include "model/hello_gecko/command.h"
 
 /***************************************************************************//**
  * Definitions and local variables.
@@ -52,7 +51,7 @@ static sl_sleeptimer_timer_handle_t timer;
 
 static void on_mic_data(const void *buffer, uint32_t frames);
 static void process_brick_callback(recognition_context_t* context);
-static void print_banner(uint32_t cpu_freq_hz, uint32_t audio_sample_rate_hz, const char* model_name);
+static void print_banner(uint32_t sample_rate_hz);
 
 #if defined(DISPLAY_INFERENCE_TIME)
 static uint32_t avg_processing_ticks = 0;
@@ -66,18 +65,18 @@ void app_init(void)
 {
   int delay;
   int param_a_offset;
-  const unsigned char *net;
-  const unsigned char *grammar;
+  const unsigned short *net;
+  const unsigned short *grammar;
   uint8_t channels = 1;
   uint32_t sample_rate_hz = (1000 * BRICK_SIZE_SAMPLES) / BRICK_SIZE_MS;
 
-  print_banner(CMU_ClockFreqGet(cmuClock_CORE), sample_rate_hz, model_name);
+  print_banner(sample_rate_hz);
 
   // Initialize Sensory library.
   delay        = 0;
   param_a_offset = 0;
-  net          = sensory_net_data;
-  grammar      = sensory_search_data;
+  net          = dnn_wakeword_netLabel;
+  grammar      = gs_wakeword_grammarLabel;
   errors_t result = SensoryInitialize((u32)net, (u32)grammar, param_a_offset, delay);
   if (result == ERR_OK) {
     // Start listening on microphone.
@@ -92,14 +91,20 @@ void app_init(void)
 /***************************************************************************//**
  * Startup banner
  ******************************************************************************/
-void print_banner(uint32_t cpu_freq_hz, uint32_t audio_sample_rate_hz, const char* model_name)
+void print_banner(uint32_t sample_rate_hz)
 {
+#if defined(MODEL_NAME)
+  const char* model_name = MODEL_NAME;
+#else
+  const char* model_name = "Unknown";
+#endif // defined(MODEL_NAME)
+
   printf("\n\n");
   printf("#==============================================#\n");
   printf("#   Sensory TrulyHandsfree Wake Word Example   #\n");
   printf("#==============================================#\n");
-  printf("#   Core Frequency: %21ld [Hz] #\n", cpu_freq_hz);
-  printf("#   Sample rate:    %21lu [Hz] #\n", audio_sample_rate_hz);
+  printf("#   Core Frequency: %21ld [Hz] #\n", CMU_ClockFreqGet(cmuClock_CORE));
+  printf("#   Sample rate:    %21lu [Hz] #\n", sample_rate_hz);
   printf("#   Model Name: %30s #\n", model_name);
   printf("#==============================================#\n");
 }
@@ -165,6 +170,46 @@ static void schedule_timer_to_turn_off_leds(uint32_t timeout_ms)
 }
 
 /***************************************************************************//**
+ * Get the string label associated with the given model output index.
+ ******************************************************************************/
+static const char* wakeword_label(uint16_t word_id)
+{
+  if (word_id < (uint16_t)WAKEWORD_PHRASE_COUNT) {
+    return wakeword_phrases[word_id];
+  }
+  return "Unknown";
+}
+
+/***************************************************************************//**
+ * Check whether the given wakeword should enable the red LED.
+ ******************************************************************************/
+static bool wakeword_should_enable_red_led(uint16_t word_id)
+{
+  return word_id == 1 || word_id == 3;
+}
+
+/***************************************************************************//**
+ * Check whether the given wakeword should enable the green LED.
+ ******************************************************************************/
+static bool wakeword_should_enable_green_led(uint16_t word_id)
+{
+  return word_id == 1 || word_id == 4;
+}
+
+/***************************************************************************//**
+ * Check whether the LED lights should time out automatically.
+ * This is only necessary if the model does not have an 'off' command,
+ * i.e. it's trained to detect only one phrase.
+ ******************************************************************************/
+static bool should_have_timeout_for_leds()
+{
+  // There are two wakeword phrases that are always present: "SILENCE" and "nota".
+  // so WAKEWORD_PHRASE_COUNT being 3 indicates there is only one actively spoken
+  // phrase the model is trained to detect
+  return WAKEWORD_PHRASE_COUNT == 3;
+}
+
+/***************************************************************************//**
  * Recognition callback, invoked whenever we run inference.
  ******************************************************************************/
 static void process_brick_callback(recognition_context_t* context)
@@ -176,12 +221,16 @@ static void process_brick_callback(recognition_context_t* context)
     return;
   }
 
-  char* label = model_command_label(context->wordID);
-  bool red_led_on = model_command_should_enable_red_led(context->wordID);
-  bool green_led_on = model_command_should_enable_green_led(context->wordID);
-  printf("[k=%6lu] Recognized %-13s (id=%d) with confidence %d\n", (long unsigned int)context->timestep, label, context->wordID, context->finalScore);
+  const char* label = wakeword_label(context->wordID);
+  bool red_led_on = wakeword_should_enable_red_led(context->wordID);
+  bool green_led_on = wakeword_should_enable_green_led(context->wordID);
+
+  int8_t confidence_pct = (int8_t)(0.0030517578125 * context->nnpqScore); // (100 * (1/32768))
+  printf("[k=%6lu] Recognized %-13s (id=%d) with confidence %d%%\n", (long unsigned int)context->timestep, label, context->wordID, confidence_pct);
   // The LED timer timeout for the model must be specified in model/<name>/command.h
-  schedule_timer_to_turn_off_leds((uint32_t)model_command_timeout_ms);
+  if (should_have_timeout_for_leds()) {
+    schedule_timer_to_turn_off_leds(1500);
+  }
 
   if (red_led_on) {
     sl_led_turn_on(&RED_LED);
