@@ -231,24 +231,30 @@ To build a new model on Sensory's VoiceHub, follow these steps:
 - Fill out the form and include `Silicon Labs EFR32` as target DSP
 - You will receive login credentials from a Sensory representative
 - Visit [voicehub.sensory.com](https://voicehub.sensory.com) and setup your account using your login credentials
-- Create a `New Project` for `Wake Word`
-- Type your words, and build the project with Silicon Labs as the target. The model should have at least one and at most 4 keyword phrases. What happens when a given keyword is detected is described under [#Model behaviour](#model-behaviour).
+- Create a `New Project`
+- Choose `Wake Word` as the project type (*not simple commands or natural language*)
+- Type your words, and build the project with `DSP: Silicon Labs Cortex-M33/M4` as the output format. The model should have at least one and at most 4 keyword phrases. What happens when a given keyword is detected is described under [#Model behaviour](#model-behaviour).
+- Tip: Choose your initial size as follows
+  - Thunderboard Sense 2: Under 100kB
+  - xG24 Dev Kit: Under 200kB
+- Tip: You can listen to the keywords by clicking on the speaker symbol to their right. If needed, play with the spelling to ensure the pronounciation is as expected.
 - Once the model is ready, download it by clicking on `Download` and then `Model`. Afterwards, extract the downloaded contents.
 
-#### Adding a model to the project
+#### Adding a model to your project
 
 You can add the new model manually, or automatically (which requires `python`)
 
 ##### Manually adding your model
 
 - Under `app/include/model` in this project, create a new directory with your model's name (e.g. `app/include/model/my_wakeword`) and inside this directory create two new files `net.h` and `search.h`.
-- Download the model files , and extract the contents.
-- In the extracted folder, locate the files ending with `net.h`, `search.c` and `search.h`.
-  - Copy the file contents from `*net.h` in the extracted dir to `net.h` in the directory you created
+- In the extracted model folder, locate the files ending with `net.h`, `search.c` and `search.h`.
+  - Copy the file contents from `*net.c` in the extracted dir to `net.h` in the directory you created
   - Copy the file contents from `*search.h` in the extracted dir to `search.h`in the directory you created
   - Append the file contents from `*search.c` from the extracted dir to the content in the `search.h` file you created
   - Change `const unsigned short` to `const unsigned short __ALIGNED(4)` in `search.h` and `net.h`. This ensures models are aligned on 4-byte boundaries in memory.
-  - Optionally add a `MODEL_NAME` `#define` with a string identifier for your model in `search.h`
+  - Add a `MODEL_NAME` `#define` with a string identifier for your model in `search.h`
+- Switch to your new model as described in the section on [#Model Selection](#model-selection)
+- Build and run the project as described in the section on [#Building and running the demo](#building-and-running-the-demo)
 
 ##### Automatically adding your model
 
@@ -286,7 +292,7 @@ The demo application performs inference periodically every 15ms, and the *Load* 
 | Model                | Load [%] | Inference time [ms] |  Approx. model size [kB] |
 |----------------------|----------|---------------------|--------------------------|
 |`hello_gecko`         | 36       | 5.4                 |   83                     |
-|`go_silabs`           | 26       | 3.9                |   83                     |
+|`go_silabs`           | 26       | 3.9                 |   83                     |
 |`voice_genie`         | 57       | 8.                  |   165                    |
 |`voice_genie_small`   | 26       | 3.9                 |   61                     |
 
