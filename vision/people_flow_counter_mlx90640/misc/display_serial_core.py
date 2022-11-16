@@ -1,24 +1,25 @@
-import sys
-import serial
-import serial.tools.list_ports
 import numpy as np
-import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import struct
 import imageio
-import argparse
-import pathlib
-import cv2
 import time
 import io
-import os
-import subprocess
 import time
-from PIL import Image
 import uuid
 types = ["UINT8", "FLOAT"]
 type_sizes = [1, 4]
+def add_args(parser):
+    parser.add_argument(
+        "--save", 
+        action="store_true", 
+        help="If this is set, the program will record the frames into a .csv file. This is used for gathering more data."
+    )
+    parser.add_argument(
+        "--animate", 
+        action="store_true", 
+        help="If this is set, the program will record the frames into a .mp4 file, useful for making demo videos."
+    )
 def figure_to_img(fig):
     io_buf = io.BytesIO()
     fig.savefig(io_buf, format='raw')
@@ -130,9 +131,12 @@ def wait_for_centroids(ser):
         centroids.append(res)
     return centroids
 
-def display_serial(ser: serial.Serial, to_save): 
+def display_serial(ser, args): 
+
+
     fig,axs = plt.subplots(1,2)
-    writer = imageio.get_writer("animation.mp4", fps=1)
+    if args.animate:
+        writer = imageio.get_writer("animation.mp4", fps=1)
     img = None
     heatmap = None
     centroids = None
@@ -140,7 +144,7 @@ def display_serial(ser: serial.Serial, to_save):
     timings = []
     sample_count = 0
     sample_name = str(uuid.uuid4())
-    if to_save:
+    if args.save:
         save_file = open(f"data/{sample_name}.csv", "a")
     try:
         while(True):
@@ -185,9 +189,10 @@ def display_serial(ser: serial.Serial, to_save):
             fig.tight_layout()
             fig.canvas.draw()
             plt.pause(0.01)
-            fig_img = figure_to_img(fig)
-            writer.append_data(fig_img)
-            if to_save:
+            if args.animate:
+                fig_img = figure_to_img(fig)
+                writer.append_data(fig_img)
+            if args.save:
                 save_string = f"{sample_count},{','.join(map(str, img.flatten().tolist()))}\n"
                 save_file.write(save_string)
             sample_count+=1
@@ -201,12 +206,13 @@ def display_serial(ser: serial.Serial, to_save):
             timings.append(time.time()-start)
 
     except KeyboardInterrupt:
-        if to_save:
+        if args.save:
             save_file.close()
-        delay = np.mean(timings)
-        print(f"Saving animation with FPS {1/delay:.3f}s")
-        writer.close()
-        gif = imageio.mimread("animation.mp4", memtest=False)
-        imageio.mimwrite("animation.mp4", gif, fps=1/delay)
+        if args.animate:
+            delay = np.mean(timings)
+            print(f"Saving animation with FPS {1/delay:.3f}s")
+            writer.close()
+            gif = imageio.mimread("animation.mp4", memtest=False)
+            imageio.mimwrite("animation.mp4", gif, fps=1/delay)
 
     

@@ -26,7 +26,10 @@ It is now possible to observe the system in action by going into the `misc` fold
 ```sh
 python display_serial_local.py
 ```
-A window should pop up showing the camera feed with the predictions.
+A window should pop up showing the camera feed with the predictions. You can install the dependencies for the python script with the following command:
+```sh
+pip install -r requirements.txt
+```
 ### Setting up Raspberry Pi
 The goal here is to have the system connected to a Raspberry Pi hanging on the roof, and that way send the information from the board to a PC that you can connect remotely to the Pi.
 
@@ -48,11 +51,14 @@ where `<serial-interface>` is the serial interface, on the recommended Pi OS it 
 
 Now that the link is set up, it is possible to display the camera results and predictions on the PC using:
 ```sh
-python display_serial_remote.py --address <ip>:<port>
+sudo python display_serial_remote.py --address <ip>:<port>
 ```
-Where `<ip>` is the ip of the Raspberry Pi, usually on the form `192.168.x.x`, and `<port>` is the port that was provided to the `socat` command.
+Where `<ip>` is the ip of the Raspberry Pi, usually on the form `192.168.x.x`, and `<port>` is the port that was provided to the `socat` command. You can install the dependencies for the python script with the following command:
+```sh
+pip install -r requirements.txt
+```
 
 ## Notes
-The display python script takes in other arguments, that can be listed by adding `-h` when running it. 
+The display python script accepts other useful arguments that can be listed by executing the script with `-h` appended. 
 
 There is sometimes an issue when connecting remotely multiple times, the solution is often to either restart the `socat` command or reconnect to the Pi WiFi endpoint.
