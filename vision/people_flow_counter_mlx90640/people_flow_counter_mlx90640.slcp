@@ -1,0 +1,79 @@
+project_name: people_flow_counter_mlx90640
+package: platform
+quality: production
+label: Platform - people flow counter
+description: > 
+  TODO
+category: Example|Platform
+source:
+  - path: app.c
+  - path: main.c
+  - path: image_utils/image_utils.cc
+  - path: people_counting.cc
+  - path: mlx90640/mlx90640.c
+  - path: mlx90640/mlx90640_i2c.c
+include:
+  - path: .
+    file_list:
+    - path: app.h
+    - path: image_utils/image_utils.h
+    - path: people_counting.h
+    - path: mlx90640/mlx90640.h
+    - path: mlx90640/mlx90640_i2c.h
+component:
+  - id: sl_system
+  - id: device_init
+  - id: sleeptimer
+  - id: i2cspm
+    instance: [sensor]
+  - id: simple_led
+    instance: [led0, led1]
+  - id: iostream_recommended_stream
+  - id: iostream_eusart
+    instance: [vcom]
+  - id: iostream_retarget_stdio
+  - id: component_catalog
+  - id: device_init_hfrco
+  - id: emlib_timer
+  - id: app_assert
+  - id: app_log
+  - id: tensorflow_lite_micro
+  - id: debug_swo
+define:
+  - name: DEBUG_EFM
+configuration:
+  - name: SL_STACK_SIZE
+    value: '16000'
+  - name: SL_HEAP_SIZE
+    value: '20000'
+  - name: SL_BOARD_ENABLE_VCOM
+    value : 1
+  - name: SL_I2CSPM_SENSOR_SPEED_MODE
+    value: 2
+  - name: SL_TFLITE_MICRO_ARENA_SIZE
+    value: 100000
+  - name: SL_IOSTREAM_USART_VCOM_BAUDRATE
+    value : 921600
+  - name: SL_IOSTREAM_EUSART_VCOM_BAUDRATE
+    value : 921600
+  - name: SL_DEBUG_SWO_SAMPLE_IRQ
+    value : 1
+  - name: SL_DEBUG_SWO_SAMPLE_PC
+    value : 1
+  - name: SL_MVP_POWER_MODE
+    value : 1
+  - name: SL_MVP_OPTIMIZE_SPEED
+    value : 1
+config_file:
+  - path: "config/tflite/model_quantized.tflite"
+    file_id: flatbuffer_file_id
+    directory: "tflite"
+toolchain_settings:
+  - option: gcc_compiler_option
+    value: "-Wno-unused-parameter"
+  - option: gcc_compiler_option
+    value: "-Wno-missing-field-initializers"
+  - option: gcc_linker_option
+    value: "-u _printf_float"
+tag:
+  - hardware:component:led:1+
