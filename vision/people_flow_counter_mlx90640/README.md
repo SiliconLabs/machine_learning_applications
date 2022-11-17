@@ -1,5 +1,6 @@
 # IR People Flow Counter
 This application leverages deep learning to detect people and determine their bounding boxes using an IR camera. It also tracks the peoples movement and can be used for detecting flows:
+
 <img src="./assets/animation.gif"/>
 
 ## Setup
