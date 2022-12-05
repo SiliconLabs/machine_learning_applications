@@ -22,4 +22,13 @@ The application recognizes the spoken phrases "Hello Gecko", "Bye Bye Gecko", "G
     <description>This precompiled application demos wakeup word detection using Sensory's TrulyHandsFree (THF) solution on the Thunderboard Sense 2.
 The application recognizes the spoken phrases "Hello Gecko", "Bye Bye Gecko", "Gecko Red" and "Gecko Green", and recognitions are used to control the on-board LEDs.</description>
    </demo>
+  <demo name="brd2601b.demo.people_flow_counter_mlx90640" label="Machine Learning - People Flow Counter">
+    <property key="demos.blurb" value="Machine Learning - People Flow Counter"/>
+    <property key="core.partCompatibility" value=".*"/>
+    <property key="core.boardCompatibility" value="brd2601b"/>
+    <property key="core.readmeFiles" value="vision/people_flow_counter_mlx90640/README.md"/>
+    <property key="core.quality" value="EXPERIMENTAL"/>
+    <properties key="filters" value="Capability|Machine\ Learning Device\ Type|SoC MCU|32-bit\ MCU Project\ Difficulty|Beginner"/>
+    <description>A demo displaying how xG24-DK2601B can be used to to gain information about people flow using an IR camera.</description>
+   </demo>
 </demos>

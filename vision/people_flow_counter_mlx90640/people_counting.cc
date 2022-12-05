@@ -6,6 +6,10 @@
 #include "sl_tflite_micro_init.h"
 #include "app_assert.h"
 #include "arm_math.h"
+#include "bluetooth.h"
+
+#define OUTPUT_OVER_BLE             true
+
 #define OUTPUT_WIDTH                16
 #define OUTPUT_HEIGHT               12
 #define OUTPUT_DEPTH                6
@@ -95,6 +99,7 @@ void people_counting_process(void)
     app_log_error("Inference failed!\n");
     return;
   }
+
   // Postprocess into a final set of bounding boxes
   num_bboxes = output_to_bboxes(&heatmap_img, bboxes);
   num_bboxes = non_max_suppression(bboxes, num_bboxes, final_bboxes, IOU_THRESHOLD);
@@ -113,16 +118,20 @@ void people_counting_process(void)
   total_crossings += crossing;
 
   // Output results
+
   char str[100];
   sprintf(str, "Crossed (L/R/T): %d/%d/%d, Present: %d", left_crossings, right_crossings, total_crossings, num_bboxes);
-
+  #if OUTPUT_OVER_BLE
+  export_image_bt(&raw_img, "image", str);
+  export_bboxes_over_serial_bt(final_bboxes, num_bboxes, 2);
+  export_centroids_over_serial_bt(centroids, num_bboxes, 2);
+  #else
   export_image(&raw_img, "image", str, sl_iostream_vcom_handle);
-  export_image(&heatmap_img, "heatmap", "Confidences", sl_iostream_vcom_handle);
-
   export_bboxes_over_serial(final_bboxes, num_bboxes, 2);
   export_centroids_over_serial(centroids, num_bboxes, 2);
+  #endif
 
-  // Save information for the next frame
+// Save information for the next frame
   memcpy(prev_centroids, centroids, sizeof(centroid) * num_bboxes);
   prev_num_bboxes = num_bboxes;
 }
@@ -196,4 +205,59 @@ int count_centroid_crossings(struct centroid centroids[], uint8_t num_labels, ui
     }
   }
   return num_crossed;
+}
+void _printf_bt(const char* format, ...)
+{
+  char buffer[256];
+  va_list args;
+  va_start(args, format);
+  int len = vsnprintf(buffer, 255, format, args);
+
+  data_notify(buffer, len);
+
+  va_end(args);
+}
+void export_image_bt(const struct Image *img, const char *title, const char *misc_info)
+{
+  _printf_bt("image:%s,%d,%d,%d,%d,%s\n", title, img->width, img->height, img->depth, (int)img->type, misc_info);
+  size_t len = img->width * img->height * img->depth * sizeof_imageformat(img->type);
+  data_notify(img->data.raw, len);
+  _printf_bt("\n");
+}
+void export_bboxes_over_serial_bt(const struct bbox bboxes[], uint8_t num_boxes, uint8_t precision)
+{
+  _printf_bt("bboxes:%i\n", num_boxes);
+  for (uint8_t i = 0; i < num_boxes; i++) {
+    _printf_bt("%.*f,%.*f,%.*f,%.*f,%.*f,%d\n",
+               precision, bboxes[i].x,
+               precision, bboxes[i].y,
+               precision, bboxes[i].width,
+               precision, bboxes[i].height,
+               precision, bboxes[i].confidence,
+               bboxes[i].class_id
+               );
+  }
+}
+void export_centroids_over_serial_bt(const struct centroid centroids[], uint8_t num_labels, uint8_t precision)
+{
+  _printf_bt("centroids:%i\n", num_labels);
+  for (uint8_t i = 0; i < num_labels; i++) {
+    if (centroids[i].prev_centroid == NULL) {
+      _printf_bt("%.*f,%.*f,%d\n",
+                 precision, centroids[i].x,
+                 precision, centroids[i].y,
+                 centroids[i].count
+                 );
+    } else {
+      _printf_bt("%.*f,%.*f,%d-%.*f,%.*f,%d,%.*f\n",
+                 precision, centroids[i].x,
+                 precision, centroids[i].y,
+                 centroids[i].count,
+                 precision, centroids[i].prev_centroid->x,
+                 precision, centroids[i].prev_centroid->y,
+                 centroids[i].prev_centroid->count,
+                 precision, centroids[i].prev_centroid_dist_squared
+                 );
+    }
+  }
 }

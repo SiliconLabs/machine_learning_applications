@@ -48,6 +48,7 @@ struct centroid{
   float prev_centroid_dist_squared;
 };
 float clampf(float d, float min, float max);
+uint8_t sizeof_imageformat(enum ImageFormat format);
 size_t get_index(size_t x, size_t y, size_t z, size_t width, size_t height, size_t depth);
 void center_crop(uint8_t *dst_img, size_t new_width, size_t new_height, uint8_t *src_img, size_t width, size_t height);
 void scale_nearest_neighbour(uint8_t *dst_img, size_t new_width, size_t new_height, uint8_t *src_img, size_t width, size_t height);

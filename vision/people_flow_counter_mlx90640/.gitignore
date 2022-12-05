@@ -1,5 +1,7 @@
 misc/*.mp4
 misc/data
+misc/vusb
 misc/__pycache__
 .*
 !.gitignore
+.DS_Store

@@ -1,15 +1,16 @@
 project_name: people_flow_counter_mlx90640
 package: platform
-quality: production
-label: Platform - people flow counter
+quality: internal
+label: Machine Learning - People Flow Counter
 description: > 
-  TODO
+  A demo displaying how xG24-DK2601B can be used to to gain information about people flow using an IR camera.
 category: Example|Platform
 source:
   - path: app.c
   - path: main.c
   - path: image_utils/image_utils.cc
   - path: people_counting.cc
+  - path: bluetooth.c
   - path: mlx90640/mlx90640.c
   - path: mlx90640/mlx90640_i2c.c
 include:
@@ -18,6 +19,7 @@ include:
     - path: app.h
     - path: image_utils/image_utils.h
     - path: people_counting.h
+    - path: bluetooth.h
     - path: mlx90640/mlx90640.h
     - path: mlx90640/mlx90640_i2c.h
 component:
@@ -33,19 +35,21 @@ component:
     instance: [vcom]
   - id: iostream_retarget_stdio
   - id: component_catalog
-  - id: device_init_hfrco
   - id: emlib_timer
   - id: app_assert
   - id: app_log
+  - id: device_init_dpll
   - id: tensorflow_lite_micro
-  - id: debug_swo
+  - id: bt_fp_soc_default
 define:
   - name: DEBUG_EFM
 configuration:
   - name: SL_STACK_SIZE
-    value: '16000'
+    value: '32000'
   - name: SL_HEAP_SIZE
-    value: '20000'
+    value: '40000'
+  - name: SL_BT_CONFIG_BUFFER_SIZE
+    value: '30000'
   - name: SL_BOARD_ENABLE_VCOM
     value : 1
   - name: SL_I2CSPM_SENSOR_SPEED_MODE
@@ -56,18 +60,21 @@ configuration:
     value : 921600
   - name: SL_IOSTREAM_EUSART_VCOM_BAUDRATE
     value : 921600
-  - name: SL_DEBUG_SWO_SAMPLE_IRQ
-    value : 1
-  - name: SL_DEBUG_SWO_SAMPLE_PC
-    value : 1
   - name: SL_MVP_POWER_MODE
-    value : 1
+    value : 0
   - name: SL_MVP_OPTIMIZE_SPEED
     value : 1
+
 config_file:
   - path: "config/tflite/model_quantized.tflite"
     file_id: flatbuffer_file_id
     directory: "tflite"
+  - path: "config/btconf/gatt_configuration.btconf"
+    directory: "btconf"
+    override:
+      component: gatt_configuration
+      file_id: gatt_configuration_file_id
+
 toolchain_settings:
   - option: gcc_compiler_option
     value: "-Wno-unused-parameter"

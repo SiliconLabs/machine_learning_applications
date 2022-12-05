@@ -415,7 +415,7 @@ void export_bboxes_over_serial(const struct bbox bboxes[], uint8_t num_boxes, ui
 {
   printf("bboxes:%i\n", num_boxes);
   for (uint8_t i = 0; i < num_boxes; i++) {
-    printf("%.*f,%.*f,%.*f, %.*f, %.*f, %d\n",
+    printf("%.*f,%.*f,%.*f,%.*f,%.*f,%d\n",
            precision, bboxes[i].x,
            precision, bboxes[i].y,
            precision, bboxes[i].width,

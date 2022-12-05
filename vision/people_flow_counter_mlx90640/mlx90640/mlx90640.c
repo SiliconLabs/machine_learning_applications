@@ -105,7 +105,6 @@ sl_status_t mlx90640_init(sl_i2cspm_t *i2cspm_instance)
  ******************************************************************************/
 sl_status_t mlx90640_get_image_array(float *pixel_array)
 {
-  uint32_t start = sl_sleeptimer_get_tick_count();
   float Ta;
   for (uint8_t x = 0 ; x < 2; x++) { //Read both sub-pages
     uint16_t mlx90640Frame[834];
@@ -121,9 +120,6 @@ sl_status_t mlx90640_get_image_array(float *pixel_array)
 
     mlx90640_CalculateTo(mlx90640Frame, &mlx90640, emissivity, tr, pixel_array);
   }
-  uint32_t ticks = sl_sleeptimer_get_tick_count() - start;
-  uint32_t time = sl_sleeptimer_tick_to_ms(ticks);
-  printf("Computations took %ld ms\n", time);
   return SL_STATUS_OK;
 }
 
