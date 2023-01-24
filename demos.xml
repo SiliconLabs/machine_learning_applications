@@ -4,8 +4,8 @@
     <property key="demos.blurb" value="Machine Learning - Sensory Wakeup Word Demo"/>
     <property key="core.partCompatibility" value=".*"/>
     <property key="core.boardCompatibility" value="brd2601b"/>
-    <property key="demos.imageFile" value="voice/sensory_wakeupword/bin/efr32xg24_dev_kit/sensory_wakeupword.s37"/>
-    <property key="core.readmeFiles" value="voice/sensory_wakeupword/README.md"/>
+    <property key="demos.imageFile" value="application/voice/sensory_wakeupword/bin/efr32xg24_dev_kit/sensory_wakeupword.s37"/>
+    <property key="core.readmeFiles" value="application/voice/sensory_wakeupword/README.md"/>
     <property key="core.quality" value="EXPERIMENTAL"/>
     <properties key="filters" value="Capability|Machine\ Learning Device\ Type|SoC MCU|32-bit\ MCU Project\ Difficulty|Beginner"/>
     <description>This precompiled application demos wakeup word detection using Sensory's TrulyHandsFree (THF) solution on the EFR32xG24 Dev Kit.
@@ -15,8 +15,8 @@ The application recognizes the spoken phrases "Hello Gecko", "Bye Bye Gecko", "G
     <property key="demos.blurb" value="Machine Learning - Sensory Wakeup Word Demo"/>
     <property key="core.partCompatibility" value=".*"/>
     <property key="core.boardCompatibility" value="brd4166a"/>
-    <property key="demos.imageFile" value="voice/sensory_wakeupword/bin/thunderboard_sense_2/sensory_wakeupword.s37"/>
-    <property key="core.readmeFiles" value="voice/sensory_wakeupword/README.md"/>
+    <property key="demos.imageFile" value="application/voice/sensory_wakeupword/bin/thunderboard_sense_2/sensory_wakeupword.s37"/>
+    <property key="core.readmeFiles" value="application/voice/sensory_wakeupword/README.md"/>
     <property key="core.quality" value="EXPERIMENTAL"/>
     <properties key="filters" value="Capability|Machine\ Learning Device\ Type|SoC MCU|32-bit\ MCU Project\ Difficulty|Beginner"/>
     <description>This precompiled application demos wakeup word detection using Sensory's TrulyHandsFree (THF) solution on the Thunderboard Sense 2.
@@ -26,7 +26,7 @@ The application recognizes the spoken phrases "Hello Gecko", "Bye Bye Gecko", "G
     <property key="demos.blurb" value="Machine Learning - People Flow Counter"/>
     <property key="core.partCompatibility" value=".*"/>
     <property key="core.boardCompatibility" value="brd2601b"/>
-    <property key="core.readmeFiles" value="vision/people_flow_counter_mlx90640/README.md"/>
+    <property key="core.readmeFiles" value="application/vision/people_flow_counter_mlx90640/README.md"/>
     <property key="core.quality" value="EXPERIMENTAL"/>
     <properties key="filters" value="Capability|Machine\ Learning Device\ Type|SoC MCU|32-bit\ MCU Project\ Difficulty|Beginner"/>
     <description>A demo displaying how xG24-DK2601B can be used to to gain information about people flow using an IR camera.</description>
