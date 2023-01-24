@@ -1,0 +1,54 @@
+pipeline {
+    // Note: The agent needs to have a Docker-compatible CLI installed
+    agent { label 'docker' }
+
+    stages {
+        stage('Prebuild') {
+            steps {
+                // We need docker to build the image and run the test containers
+                echo '=== verifying docker is available ==='
+                sh 'which docker'
+
+                // Useful to list all files in the repository for traceability and debugging
+                echo '=== listing working directory files ==='
+                sh 'find .'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo '=== building container ==='
+                // Note: the container registry doesn't exist,
+                // it's just added to avoid accidental pushes to the Docker Hub.
+                sh 'docker build -t containers.silabs.com/mla-builder -f build/Dockerfile .'
+            }
+        }
+
+        stage('Tests') {
+            steps {
+                echo '=== compiling code and running tests ==='
+                sh 'docker run containers.silabs.com/mla-builder tests/run.sh /opt/gecko_sdk'
+            }
+        }
+    }
+
+    post {
+        always {
+            echo("=== notifying slack channel #${SLACK_NOTIF_CHANNEL_ML} ===")
+            script { slackNotifyBuildResult(SLACK_NOTIF_CHANNEL_ML) }
+        }
+    }
+}
+
+/** Slack hook for notifying users of build results */
+void slackNotifyBuildResult(String channel) {
+    String buildResult = currentBuild.currentResult.toLowerCase().capitalize()
+    String commitMessage  = sh(script: 'git log -n1 --pretty=%s', returnStdout: true).trim()
+    String authorName = sh(script: 'git log -n1 --pretty=%an', returnStdout: true).trim()
+    String authorEmail = sh(script: 'git log -n1 --pretty=%ae', returnStdout: true).trim()
+
+    String slackMessage = """<${BUILD_URL}|*${buildResult}: ${JOB_NAME} #${BUILD_NUMBER}*>
+                            |_${commitMessage}_ by <mailto:${authorEmail}|${authorName}>""".stripMargin()
+
+    slackSend(color: 'good', channel: channel, message: slackMessage)
+}
