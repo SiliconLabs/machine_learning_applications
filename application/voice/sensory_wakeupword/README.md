@@ -121,7 +121,7 @@ You can program your own device with these using `commander`,
 # in sensory_wakeupword/
 
 # Assuming you've connected a EFR32xG24 Dev Kit to your machine over USB,
-commander flash bin/efr32xg24_dev_kit/sensory_wakeupword.s37
+commander flash bin/efr32xg24_dev_kit/sensory_wakeupword_series_2.s37
 # Note: If you encounter issues when flashing, try running `commander device recover` first.
 ```
 
@@ -143,7 +143,7 @@ Then, build the project using `make`,
 ```sh
 # in sensory_wakeupword/
 cd target/brd2601b
-make -f sensory_wakeupword.Makefile -j
+make -f sensory_wakeupword_series_2.Makefile -j
 ```
 
 The compiled code can then be found under `target/brd2601b/build/debug`, and can be flashed onto your board as described in the section [#Command line tools: Flashing the demo](#command-line-tools-flashing-the-demo).

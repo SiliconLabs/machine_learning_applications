@@ -1,4 +1,4 @@
-project_name: sensory_wakeupword
+project_name: sensory_wakeupword_series_2
 package: platform
 quality: internal
 label: Sensory's Deeply Embedded DSP Speech Recognition Technology
