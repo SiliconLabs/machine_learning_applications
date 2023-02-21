@@ -89,11 +89,12 @@ def wait_for_bboxes(ser):
         bbox_line = ser.readline().decode("utf-8").strip()
         print(bbox_line)
         bbox_info = bbox_line.split(",")
-        bbox = np.zeros(shape=(4,))
+        bbox = np.zeros(shape=(5,))
         bbox[0] = float(bbox_info[0])
         bbox[1] = float(bbox_info[1])
         bbox[2] = float(bbox_info[2])
         bbox[3] = float(bbox_info[3])
+        bbox[4] = float(bbox_info[4])
         bboxes.append(bbox)
     return bboxes
 
@@ -175,6 +176,7 @@ def display_serial(ser, args):
             for bbox in bboxes:
                 rect = patches.Rectangle((bbox[0], bbox[1]), bbox[2], bbox[3], edgecolor="r", facecolor="none")
                 axs.add_patch(rect)
+                axs.annotate(f"{bbox[4]}", (bbox[0], bbox[1]), ha="left", va="top", c="red", fontsize=12)
             for centroid in centroids:
                 x = centroid[0]
                 y = centroid[1]
