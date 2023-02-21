@@ -16,7 +16,7 @@ The title shows information about people crossing the red line:
     <li> <b>Present</b> is the number of people (number of bounding boxes) currently detected by the model on the full image.</li>
 </ul>
 
-The main benefit of using deep learning to solve this problem is the ability to separate people that are close together, and in general separate objects that have overlapping IR signatures.
+The main benefit of using deep learning to solve this problem is the ability to separate people that are close together, and in general separate objects that have overlapping IR signatures. This example also includes a way to gather new data, which is recommended to achieve improved robustness and reduce the likelihood of false positives.
 
 *The model training data is available upon request.*
 ### Setup
@@ -65,7 +65,7 @@ Final step is to flash the board, assuming the working directory is still `.<boa
 commander flash "build/debug/people_flow_counter_mlx90640.s37"
 ```
 ### Connecting with Bluetooth Low Energy (BLE)
-*Due to the limitations of `bleak`, a python library for BLE, there might be some instabilities depending on the OS. It has been tested on both Windows and Mac OS, and proven to work out of the box, but with some instabilities as mentioned earlier.* 
+*Due to the limitations of `bleak`, a python library for BLE, there might be some instabilities depending on the OS. It has been tested on both Windows and Mac OS, and proven to work out of the box, but with some instabilities. "Forgetting" the device can sometimes help.* 
 
 The first step is to launch the BLE server on the PC by going into the `misc` folder and running:
 ```sh
