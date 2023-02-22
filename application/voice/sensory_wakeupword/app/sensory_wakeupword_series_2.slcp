@@ -24,10 +24,10 @@ include:
 library:
   - path: lib/sensory.a
     condition:
-        - "device_series_1"
+      - "device_series_1"
   - path: lib/sensoryhf.a
     condition:
-        - "device_series_2"
+      - "device_series_2"
 source:
   - path: app.c
   - path: main.c

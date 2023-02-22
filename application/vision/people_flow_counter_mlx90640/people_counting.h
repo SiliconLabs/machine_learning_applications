@@ -1,7 +1,9 @@
 #ifndef PEOPLE_COUNTING_H
 #define PEOPLE_COUNTING_H
 
-#include "image_utils/image_utils.h"
+#include "image_utils.h"
+#include "centroids.h"
+#include "bboxes.h"
 #include <stdarg.h>
 
 #ifdef __cplusplus

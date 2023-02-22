@@ -37,7 +37,7 @@ void generate_empty_image(struct Image* out, size_t width, size_t height, size_t
 uint8_t find_connected_pixels(const struct Image *dst_label_img, const struct Image *src_img, float threshold, struct queue_pixel_entry* working_memory, uint32_t working_memory_len);
 void normalize_histogram(const struct Image *src_img, const struct Image *dst_img);
 #ifndef UNIT_TEST
-void export_image(const struct Image *img, const char *title, const char *misc_info, sl_iostream_t *handle)
+inline void export_image(const struct Image *img, const char *title, const char *misc_info, sl_iostream_t *handle)
 {
   printf("image:%s,%d,%d,%d,%d,%s\n", title, img->width, img->height, img->depth, (int)img->format, misc_info);
   sl_iostream_write(handle, img->data.raw, img->width * img->height * img->depth * sizeof_imageformat(img->format));

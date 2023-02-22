@@ -48,28 +48,28 @@ void people_counting_init(void)
   mlx90640_init(sl_i2cspm_sensor);
   mlx90640_SetRefreshRate(0x06);
 
-  raw_img.type = IMAGEFORMAT_FLOAT;
+  raw_img.format = IMAGEFORMAT_FLOAT;
   raw_img.width = MLX90640_WIDTH;
   raw_img.height = MLX90640_HEIGHT;
   raw_img.depth = 1;
   raw_img.data.f = ir_img_buf;
 
   model_input = sl_tflite_micro_get_input_tensor();
-  model_input_img.type = IMAGEFORMAT_FLOAT;
+  model_input_img.format = IMAGEFORMAT_FLOAT;
   model_input_img.width = MLX90640_WIDTH;
   model_input_img.height = MLX90640_HEIGHT;
   model_input_img.depth = 1;
   model_input_img.data.f = model_input->data.f;
 
   interpreter = sl_tflite_micro_get_interpreter();
-  heatmap_img.type = IMAGEFORMAT_FLOAT;
+  heatmap_img.format = IMAGEFORMAT_FLOAT;
   heatmap_img.width = OUTPUT_WIDTH;
   heatmap_img.height = OUTPUT_HEIGHT;
   heatmap_img.depth = OUTPUT_DEPTH;
   heatmap_img.data.f = interpreter->output(0)->data.f;
 
   label_image.data.f = label_image_buf;
-  label_image.type = IMAGEFORMAT_UINT8;
+  label_image.format = IMAGEFORMAT_UINT8;
   label_image.width = OUTPUT_WIDTH;
   label_image.height = OUTPUT_HEIGHT;
 
@@ -82,17 +82,19 @@ void people_counting_init(void)
     return;
   }
 }
-float process_func_normalize(float val)
+// Preprocess the image before inference: normalize by 60
+void preprocess(struct Image* input_img, struct Image* output_img)
 {
-  val = val / 60;
-  return val;
+  for (size_t i = 0; i < input_img->width * input_img->height; i++) {
+    output_img->data.f[i] = input_img->data.f[i] / 60.0f;
+  }
 }
 void people_counting_process(void)
 {
   // Obtain and preprocess the image
   mlx90640_get_image_array(raw_img.data.f);
-  process_image(&model_input_img, &raw_img, process_func_normalize);
-
+  //process_image(&model_input_img, &raw_img, process_func_normalize);
+  preprocess(&raw_img, &model_input_img);
   // Perform inference
   TfLiteStatus invoke_status = interpreter->Invoke();
   if (invoke_status != kTfLiteOk) {
@@ -219,8 +221,8 @@ void _printf_bt(const char* format, ...)
 }
 void export_image_bt(const struct Image *img, const char *title, const char *misc_info)
 {
-  _printf_bt("image:%s,%d,%d,%d,%d,%s\n", title, img->width, img->height, img->depth, (int)img->type, misc_info);
-  size_t len = img->width * img->height * img->depth * sizeof_imageformat(img->type);
+  _printf_bt("image:%s,%d,%d,%d,%d,%s\n", title, img->width, img->height, img->depth, (int)img->format, misc_info);
+  size_t len = img->width * img->height * img->depth * sizeof_imageformat(img->format);
   data_notify(img->data.raw, len);
   _printf_bt("\n");
 }

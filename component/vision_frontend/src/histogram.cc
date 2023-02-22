@@ -48,7 +48,6 @@ void histogram_equalize(const struct Image* src_img, const struct Image* dst_img
 
   // Calculate CDF of histogram
   calculate_cdf(hist, cdf, HIST_LEVELS);
-  size_t cdf_max = cdf[HIST_LEVELS - 1];
   size_t cdf_min = cdf[0];
 
   // Calculate transformed intensity values

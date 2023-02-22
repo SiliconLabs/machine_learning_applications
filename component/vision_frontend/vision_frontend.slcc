@@ -4,12 +4,14 @@ package: machine_learning
 description: Component that utilities for processing vision related information such as images, bounding boxes, and more.
 category: Machine Learning
 quality: experimental
-root_path: vision/frontend
+root_path: component/vision_frontend
 include:
-  - path: inc/image_utils.h
-  - path: inc/histogram.h
-  - path: inc/bboxes.h
-  - path: inc/centroids.h
+  - path: inc
+    file_list:
+      - path: image_utils.h
+      - path: histogram.h
+      - path: bboxes.h
+      - path: centroids.h
 source:
   - path: src/image_utils.cc
   - path: src/bboxes.cc

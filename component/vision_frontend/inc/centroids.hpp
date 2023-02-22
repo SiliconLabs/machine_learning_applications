@@ -21,7 +21,6 @@ void _find_centroids_connected_pixels(const struct Image *label_img, const struc
         continue;
       }
       counts[label - 1]++;
-      T val = _get_pixel_value<T>(src_img, x, y, 0);
       // Sum the coordinates of a label
       x_vals[label - 1] += ((float)x + 0.5f);
       y_vals[label - 1] += ((float)y + 0.5f);
