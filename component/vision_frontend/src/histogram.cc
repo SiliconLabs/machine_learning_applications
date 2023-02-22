@@ -3,13 +3,6 @@
 
 #define HIST_LEVELS 256
 
-/**
- * @brief Calculate the cumulative distribution function of a histogram
- *
- * @param hist The histogram
- * @param cdf The output cdf
- * @param hist_levels The number of histogram levels
- */
 void calculate_cdf(const size_t* hist, size_t* cdf, size_t hist_levels)
 {
   cdf[0] = hist[0];
@@ -18,12 +11,6 @@ void calculate_cdf(const size_t* hist, size_t* cdf, size_t hist_levels)
   }
 }
 
-/**
- * @brief Equalize the histogram of an image
- *
- * @param src_img
- * @param dst_img
- */
 void histogram_equalize(const struct Image* src_img, const struct Image* dst_img)
 {
   if (src_img->format != IMAGEFORMAT_UINT8) {

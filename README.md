@@ -29,6 +29,7 @@ Feel free to open an issue if you have any questions or encounter problems, but 
   - [License](#license)
 
 ___
+
 ## About
 
 The repository is organized by use case category. All applications are self contained, and include their own documentation.

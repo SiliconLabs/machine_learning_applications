@@ -3,13 +3,7 @@
 #include <vector>
 #include "image_utils.hpp"
 #include "bboxes.hpp"
-/**
- * @brief Calculate the intersection over union of two bounding boxes
- *
- * @param a
- * @param b
- * @return Intersection over union as a float
- */
+
 float calculate_iou(const struct bbox* a, const struct bbox* b)
 {
   float xA = std::max<float>(a->x, b->x);
@@ -41,15 +35,7 @@ bool bbox_sort(const struct bbox* a, const struct bbox *b)
 {
   return (a->confidence < b->confidence);
 }
-/**
- * @brief Non-max suppression algorithm
- *
- * @param bboxes The raw bounding boxes
- * @param max_num_bboxes The maximum number of raw bounding boxes, also the size of the input bbox array
- * @param bboxes_out The output array to place the remaining bounding boxes after the algorithm has done its job
- * @param iou_threshold Bounding boxes that have a greater overlap than this threshold will be competing against eachother
- * @return uint16_t Number of remaining bounding boxes
- */
+
 size_t non_max_suppression(struct bbox bboxes[], size_t max_num_bboxes, struct bbox bboxes_out[], float iou_threshold)
 {
   static std::vector<struct bbox*> to_check;
@@ -77,12 +63,7 @@ size_t non_max_suppression(struct bbox bboxes[], size_t max_num_bboxes, struct b
   }
   return num_kept_bboxes;
 }
-/**
- * @brief Blur a bounding box
- *
- * @param img The input image
- * @param bb The bounding box to blur
- */
+
 void blur_bbox(const struct Image* img, const struct bbox* bb, size_t kernel_size)
 {
   switch (img->format) {
@@ -98,13 +79,6 @@ void blur_bbox(const struct Image* img, const struct bbox* bb, size_t kernel_siz
   }
 }
 
-/**
- * @brief Pixelize a bounding box
- *
- * @param img The input image
- * @param bb The bounding box to pixelize
- * @param pixel_size The pixel size
- */
 void pixelize_bbox(const struct Image* img, const struct bbox* bb, size_t pixel_size)
 {
   switch (img->format) {
@@ -119,13 +93,7 @@ void pixelize_bbox(const struct Image* img, const struct bbox* bb, size_t pixel_
       exit(1);
   }
 }
-/**
- * @brief Export bounding boxes over serial
- *
- * @param bboxes
- * @param num_boxes
- * @param precision
- */
+
 void export_bboxes_over_serial(const struct bbox bboxes[], uint8_t num_boxes, uint8_t precision)
 {
   printf("bboxes:%i\n", num_boxes);
