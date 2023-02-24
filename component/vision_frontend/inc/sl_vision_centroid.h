@@ -1,23 +1,23 @@
-#ifndef CENTROIDS_H
-#define CENTROIDS_H
+#ifndef SL_VISION_CENTROID_H
+#define SL_VISION_CENTROID_H
 
 #include <stdio.h>
-#include "image_utils.h"
-#include "bboxes.h"
+#include "sl_vision_image.h"
+#include "sl_vision_bbox.h"
 #ifdef __cplusplus
 
 extern "C" {
 #endif
 
-struct centroid{
+typedef struct sl_vision_centroid{
   float x;
   float y;
   uint16_t count;
-  struct centroid* next_centroid;
+  struct sl_vision_centroid* next_centroid;
   float next_centroid_dist_squared;
-  struct centroid* prev_centroid;
+  struct sl_vision_centroid* prev_centroid;
   float prev_centroid_dist_squared;
-};
+} sl_vision_centroid_t;
 /**
  * @brief Finds centroids from connected pixels represented in a label image
  *
@@ -27,7 +27,7 @@ struct centroid{
  * @param centroids_out The centroids output array
  * @param num_labels The number of unique blobs on connected pixels
  */
-void find_centroids_connected_pixels(const struct Image *label_img, const struct Image *src_img, struct centroid centroids_out[], uint8_t num_labels);
+void sl_vision_centroid_from_connected_pixels(const sl_vision_image_t *label_img, const sl_vision_image_t *src_img, sl_vision_centroid_t centroids_out[], uint8_t num_labels);
 /**
  * @brief Given a list of bounding boxes, output a list of centroids
  *
@@ -35,7 +35,7 @@ void find_centroids_connected_pixels(const struct Image *label_img, const struct
  * @param num_bboxes
  * @param centroids_out
  */
-void find_centroids_bboxes(struct bbox bboxes[], uint8_t num_bboxes, struct centroid centroids_out[]);
+void sl_vision_centroid_from_bboxes(sl_vision_bbox_t bboxes[], uint8_t num_bboxes, sl_vision_centroid_t centroids_out[]);
 /**
  * @brief Function that keeps track of centroids over time.
  * Based on the assumption that the object closest in the current timestep to an object in the previous timestep, is the same object.
@@ -46,7 +46,7 @@ void find_centroids_bboxes(struct bbox bboxes[], uint8_t num_bboxes, struct cent
  * @param num_labels_now The number of centroids in the current timestep
  * @param max_dist Maximum distance to consider objects as the same
  */
-void update_centroid_connections(struct centroid centroids_prev[], uint8_t num_labels_prev, struct centroid centroids_now[], uint8_t num_labels_now, float max_dist);
+void sl_vision_centroid_track(sl_vision_centroid_t centroids_prev[], uint8_t num_labels_prev, sl_vision_centroid_t centroids_now[], uint8_t num_labels_now, float max_dist);
 /**
  * @brief Exports the centroids over serial
  *
@@ -54,10 +54,10 @@ void update_centroid_connections(struct centroid centroids_prev[], uint8_t num_l
  * @param num_labels
  * @param precision
  */
-void export_centroids_over_serial(const struct centroid centroids[], uint8_t num_labels, uint8_t precision);
+void sl_vision_centroid_export_over_serial(const sl_vision_centroid_t centroids[], uint8_t num_labels, uint8_t precision);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif // CENTROIDS_H
+#endif // SL_VISION_CENTROID_H

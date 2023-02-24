@@ -1,22 +1,22 @@
 #include "gtest/gtest.h"
-#include "image_utils.h"
-#include "bboxes.h"
+#include "sl_vision_image.h"
+#include "sl_vision_bbox.h"
 
 TEST(FrontendTest, CalculateIoU) {
-  struct bbox a = { 0, 0, 10, 10 };
-  struct bbox b = { 5, 5, 5, 5 };
-  struct bbox c = { 0, 0, 10, 10 };
-  struct bbox d = { 10, 10, 20, 20 };
-  float iou1 = calculate_iou(&a, &b);
-  float iou2 = calculate_iou(&c, &d);
+  sl_vision_bbox_t a = { 0, 0, 10, 10 };
+  sl_vision_bbox_t b = { 5, 5, 5, 5 };
+  sl_vision_bbox_t c = { 0, 0, 10, 10 };
+  sl_vision_bbox_t d = { 10, 10, 20, 20 };
+  float iou1 = sl_vision_bbox_calculate_iou(&a, &b);
+  float iou2 = sl_vision_bbox_calculate_iou(&c, &d);
 
   EXPECT_FLOAT_EQ(iou1, 0.25);
   EXPECT_FLOAT_EQ(iou2, 0.0);
 }
 
 TEST(FrontendTest, NonMaxSuppression) {
-  // Arrange
-  struct bbox bboxes[5] = {
+  // Arrange abcdefgdghh
+  sl_vision_bbox_t bboxes[5] = {
     { 0, 0, 5, 5, 0, 1.0 },
     { 0, 0, 10, 10, 0, 0.5 },
     { 20, 20, 30, 30, 0, 1.0 },
@@ -24,10 +24,10 @@ TEST(FrontendTest, NonMaxSuppression) {
     { 30, 30, 40, 40, 0, 1.0 }
   };
   size_t max_num_bboxes = 5;
-  struct bbox bboxes_out[5];
+  sl_vision_bbox_t bboxes_out[5];
   float iou_threshold = 0.1f;
   // Act
-  size_t num_remaining = non_max_suppression(bboxes, max_num_bboxes, bboxes_out, iou_threshold);
+  size_t num_remaining = sl_vision_bbox_non_max_suppression(bboxes, max_num_bboxes, bboxes_out, iou_threshold);
 
   // Assert
   EXPECT_EQ(num_remaining, 3);

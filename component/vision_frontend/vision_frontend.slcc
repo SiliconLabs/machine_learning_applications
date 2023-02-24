@@ -8,15 +8,16 @@ root_path: component/vision_frontend
 include:
   - path: inc
     file_list:
-      - path: image_utils.h
-      - path: histogram.h
-      - path: bboxes.h
-      - path: centroids.h
+      - path: sl_vision_image.h
+      - path: sl_vision_histogram.h
+      - path: sl_vision_bbox.h
+      - path: sl_vision_centroid.h
+      - path: sl_vision.h
 source:
-  - path: src/image_utils.cc
-  - path: src/bboxes.cc
-  - path: src/centroids.cc
-  - path: src/histogram.cc
+  - path: src/sl_vision_image.cc
+  - path: src/sl_vision_bbox.cc
+  - path: src/sl_vision_centroid.cc
+  - path: src/sl_vision_histogram.cc
 provides:
   - name: vision_frontend
 requires:

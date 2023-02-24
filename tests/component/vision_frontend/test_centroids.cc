@@ -1,10 +1,10 @@
 #include "gtest/gtest.h"
-#include "image_utils.h"
-#include "centroids.h"
+#include "sl_vision_image.h"
+#include "sl_vision_centroid.h"
 
 TEST(FrontEndTest, FindCentroidsConnectedPixels) {
   // Arrange
-  struct Image src_img;
+  sl_vision_image_t src_img;
   src_img.width = 4;
   src_img.height = 4;
   src_img.depth = 1;
@@ -14,18 +14,17 @@ TEST(FrontEndTest, FindCentroidsConnectedPixels) {
                                       0, 2, 2, 0,
                                       0, 2, 2, 0 };
 
-  struct Image label_img;
-  generate_empty_image(&label_img, src_img.width, src_img.height, src_img.depth, IMAGEFORMAT_UINT8);
-  uint32_t working_memory_len = src_img.width * src_img.height * src_img.depth;
-  struct queue_pixel_entry working_memory[working_memory_len];
-  float threshold = 1.4f;
-  uint8_t num_labels = find_connected_pixels(&label_img, &src_img, threshold, working_memory, working_memory_len);
+  sl_vision_image_t label_img;
+  sl_vision_image_generate_empty(&label_img, src_img.width, src_img.height, src_img.depth, IMAGEFORMAT_UINT8);
 
-  print_image(&label_img);
-  struct centroid centroids_out[num_labels];
+  float threshold = 1.4f;
+  uint8_t num_labels = sl_vision_image_connected_pixels(&label_img, &src_img, threshold);
+
+  sl_vision_image_print(&label_img);
+  sl_vision_centroid_t centroids_out[num_labels];
 
   // Act
-  find_centroids_connected_pixels(&label_img, &src_img, centroids_out, num_labels);
+  sl_vision_centroid_from_connected_pixels(&label_img, &src_img, centroids_out, num_labels);
 
   // Assert
   EXPECT_FLOAT_EQ(centroids_out[0].x, 2.0f);

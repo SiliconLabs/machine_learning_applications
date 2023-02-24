@@ -1,12 +1,12 @@
-#ifndef IMAGE_UTILS_HPP
-#define IMAGE_UTILS_HPP
-#include "image_utils.h"
+#ifndef SL_VISION_IMAGE_HPP
+#define SL_VISION_IMAGE_HPP
+#include "sl_vision_image.h"
 
 #include <random>
 template <typename T>
-T _get_pixel_value(const struct Image *img, size_t x, size_t y, size_t z)
+T cpp_sl_vision_image_pixel_get_value(const sl_vision_image_t *img, size_t x, size_t y, size_t z)
 {
-  return ((T *)img->data.raw)[get_index(x, y, z, img->width, img->height, img->depth)];
+  return ((T *)img->data.raw)[sl_vision_image_index(img, x, y, z)];
 }
 /**
  * @brief Set the pixel value at the given coordinates
@@ -19,9 +19,9 @@ T _get_pixel_value(const struct Image *img, size_t x, size_t y, size_t z)
  * @param val
  */
 template <typename T>
-void _set_pixel_value(const struct Image *img, size_t x, size_t y, size_t z, T val)
+void cpp_sl_vision_image_pixel_set_value(const sl_vision_image_t *img, size_t x, size_t y, size_t z, T val)
 {
-  ((T *)img->data.raw)[get_index(x, y, z, img->width, img->height, img->depth)] = val;
+  ((T *)img->data.raw)[sl_vision_image_index(img, x, y, z)] = val;
 }
 
 /**
@@ -34,7 +34,7 @@ void _set_pixel_value(const struct Image *img, size_t x, size_t y, size_t z, T v
    @return The blurred value of the pixel
  */
 template <typename T>
-T _blur_pixel(const struct Image *img, size_t x, size_t y, size_t z, size_t kernel_size)
+T cpp_sl_vision_image_pixel_blur(const sl_vision_image_t *img, size_t x, size_t y, size_t z, size_t kernel_size)
 {
   size_t kernel_half_size = kernel_size / 2;
   size_t kernel_area = kernel_size * kernel_size;
@@ -51,7 +51,7 @@ T _blur_pixel(const struct Image *img, size_t x, size_t y, size_t z, size_t kern
       if (i >= (int)img->width || j >= (int)img->height) {
         continue;
       }
-      T val = _get_pixel_value<T>(img, i, j, z) / kernel_area;
+      T val = cpp_sl_vision_image_pixel_get_value<T>(img, i, j, z) / kernel_area;
       sum += val;
       // Only happens when the sum overflows, so should never execute for float type
       // If it does execute for float, then output will be wrong...
@@ -70,7 +70,7 @@ T _blur_pixel(const struct Image *img, size_t x, size_t y, size_t z, size_t kern
  * @param new_height The new height of the image
  */
 template<typename T>
-void _center_crop(const struct Image* src_img, const struct Image* dst_img)
+void cpp_sl_vision_image_crop_center(const sl_vision_image_t* src_img, const sl_vision_image_t* dst_img)
 {
   size_t new_width = dst_img->width;
   size_t new_height = dst_img->height;
@@ -81,18 +81,24 @@ void _center_crop(const struct Image* src_img, const struct Image* dst_img)
   for (size_t x = start_x; x < end_x; x++) {
     for (size_t y = start_y; y < end_y; y++) {
       for (size_t z = 0; z < src_img->depth; z++) {
-        T val = _get_pixel_value<T>(src_img, x, y, z);
-        _set_pixel_value<T>(dst_img, x - start_x, y - start_y, z, val);
+        T val = cpp_sl_vision_image_pixel_get_value<T>(src_img, x, y, z);
+        cpp_sl_vision_image_pixel_set_value<T>(dst_img, x - start_x, y - start_y, z, val);
       }
     }
   }
 }
+struct queue_pixel_entry{
+  sl_slist_node_t node;
+  int x;
+  int y;
+};
 template <typename T>
-uint8_t _find_connected_pixels(const struct Image *dst_label_img, const struct Image *src_img, float threshold, struct queue_pixel_entry* working_memory, uint32_t working_memory_len)
+uint8_t cpp_sl_vision_image_connected_pixels(const sl_vision_image_t *dst_label_img, const sl_vision_image_t *src_img, float threshold)
 {
   static int dxs[] = { 0, 1, -1 };
   static int dys[] = { 0, 1, -1 };
-  memset(working_memory, 0, working_memory_len * sizeof(queue_pixel_entry));
+  uint32_t working_memory_len = src_img->width * src_img->height * src_img->depth;
+  struct queue_pixel_entry* working_memory = (queue_pixel_entry *)calloc(working_memory_len, sizeof(queue_pixel_entry));
   uint32_t queue_ptr = 0;
   sl_slist_node_t *head;
   sl_slist_init(&head);
@@ -100,14 +106,14 @@ uint8_t _find_connected_pixels(const struct Image *dst_label_img, const struct I
   uint8_t current_label = 0;
   for (size_t y = 0; y < src_img->height; y++) {
     for (size_t x = 0; x < src_img->width; x++) {
-      if (_get_pixel_value<T>(src_img, x, y, 0) < threshold) {
+      if (cpp_sl_vision_image_pixel_get_value<T>(src_img, x, y, 0) < threshold) {
         continue;
       }
-      if (_get_pixel_value<uint8_t>(dst_label_img, x, y, 0) > 0) {
+      if (cpp_sl_vision_image_pixel_get_value<uint8_t>(dst_label_img, x, y, 0) > 0) {
         continue;
       }
       current_label++;
-      _set_pixel_value<uint8_t>(dst_label_img, x, y, 0, current_label);
+      cpp_sl_vision_image_pixel_set_value<uint8_t>(dst_label_img, x, y, 0, current_label);
       working_memory[queue_ptr] = { .x = (int)x, .y = (int)y };
       sl_slist_push_back(&head, &working_memory[queue_ptr].node);
       queue_ptr++;
@@ -130,8 +136,8 @@ uint8_t _find_connected_pixels(const struct Image *dst_label_img, const struct I
             if (next_y < 0 || next_y >= (int)src_img->height) {
               continue;
             }
-            if (_get_pixel_value<T>(src_img, next_x, next_y, 0) >= threshold && _get_pixel_value<uint8_t>(dst_label_img, next_x, next_y, 0) == 0) {
-              _set_pixel_value<uint8_t>(dst_label_img, next_x, next_y, 0, current_label);
+            if (cpp_sl_vision_image_pixel_get_value<T>(src_img, next_x, next_y, 0) >= threshold && cpp_sl_vision_image_pixel_get_value<uint8_t>(dst_label_img, next_x, next_y, 0) == 0) {
+              cpp_sl_vision_image_pixel_set_value<uint8_t>(dst_label_img, next_x, next_y, 0, current_label);
               working_memory[queue_ptr] =  {   .x = next_x, .y = next_y };
               sl_slist_push_back(&head, &working_memory[queue_ptr].node);
               queue_ptr++;
@@ -152,7 +158,7 @@ uint8_t _find_connected_pixels(const struct Image *dst_label_img, const struct I
  * @param depth
  */
 template<typename T>
-void _generate_random_image(struct Image* out, size_t width, size_t height, size_t depth)
+void cpp_sl_vision_image_generate_random(sl_vision_image_t* out, size_t width, size_t height, size_t depth)
 {
   out->width = width;
   out->height = height;
@@ -167,7 +173,7 @@ void _generate_random_image(struct Image* out, size_t width, size_t height, size
   }
 }
 template<typename T>
-void _generate_empty_image(struct Image* out, size_t width, size_t height, size_t depth)
+void cpp_sl_vision_image_generate_empty(sl_vision_image_t* out, size_t width, size_t height, size_t depth)
 {
   out->width = width;
   out->height = height;
@@ -175,4 +181,4 @@ void _generate_empty_image(struct Image* out, size_t width, size_t height, size_
   out->data.raw = malloc(width * height * depth * sizeof(T));
   memset(out->data.raw, 0, width * height * depth * sizeof(T));
 }
-#endif /* IMAGE_UTILS_HPP */
+#endif // SL_VISION_IMAGE_HPP

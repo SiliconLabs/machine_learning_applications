@@ -1,5 +1,5 @@
-#ifndef BBOXES_H
-#define BBOXES_H
+#ifndef SL_VISION_BBOX_H
+#define SL_VISION_BBOX_H
 
 #include <stdio.h>
 #include "sl_slist.h"
@@ -7,17 +7,18 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-struct queue_bbox_entry{
-  sl_slist_node_t node;
-  const struct bbox* bb;
-};
-struct bbox {
+
+typedef struct  {
   float x;
   float y;
   float width;
   float height;
   uint16_t class_id;
   float confidence;
+} sl_vision_bbox_t;
+struct queue_bbox_entry{
+  sl_slist_node_t node;
+  const sl_vision_bbox_t* bb;
 };
 /**
  * @brief Calculate the intersection over union of two bounding boxes
@@ -26,7 +27,7 @@ struct bbox {
  * @param b
  * @return Intersection over union as a float
  */
-float calculate_iou(const struct bbox* a, const struct bbox* b);
+float sl_vision_bbox_calculate_iou(const sl_vision_bbox_t* a, const sl_vision_bbox_t* b);
 /**
  * @brief Non-max suppression algorithm
  *
@@ -36,14 +37,14 @@ float calculate_iou(const struct bbox* a, const struct bbox* b);
  * @param iou_threshold Bounding boxes that have a greater overlap than this threshold will be competing against eachother
  * @return uint16_t Number of remaining bounding boxes
  */
-size_t non_max_suppression(struct bbox bboxes[], size_t max_num_bboxes, struct bbox bboxes_out[], float iou_threshold);
+size_t sl_vision_bbox_non_max_suppression(sl_vision_bbox_t bboxes[], size_t max_num_bboxes, sl_vision_bbox_t bboxes_out[], float iou_threshold);
 /**
  * @brief Blur a bounding box
  *
  * @param img The input image
  * @param bb The bounding box to blur
  */
-void blur_bbox(const struct Image* img, const struct bbox* bb, size_t kernel_size);
+void sl_vision_bbox_blur(const sl_vision_image_t* img, const sl_vision_bbox_t* bb, size_t kernel_size);
 /**
  * @brief Pixelize a bounding box
  *
@@ -51,7 +52,7 @@ void blur_bbox(const struct Image* img, const struct bbox* bb, size_t kernel_siz
  * @param bb The bounding box to pixelize
  * @param pixel_size The pixel size
  */
-void pixelize_bbox(const struct Image* img, const struct bbox* bb, size_t pixel_size);
+void sl_vision_bbox_pixelize(const sl_vision_image_t* img, const sl_vision_bbox_t* bb, size_t pixel_size);
 /**
  * @brief Export bounding boxes over serial
  *
@@ -59,9 +60,9 @@ void pixelize_bbox(const struct Image* img, const struct bbox* bb, size_t pixel_
  * @param num_boxes
  * @param precision
  */
-void export_bboxes_over_serial(const struct bbox bboxes[], uint8_t num_boxes, uint8_t precision);
+void sl_vision_bbox_export_over_serial(const sl_vision_bbox_t bboxes[], uint8_t num_boxes, uint8_t precision);
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* BBOXES_H */
+#endif // SL_VISION_BBOX_H

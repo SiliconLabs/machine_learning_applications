@@ -1,6 +1,6 @@
-#ifndef HISTOGRAM_H
-#define HISTOGRAM_H
-#include "image_utils.h"
+#ifndef SL_VISION_HISTOGRAM_H
+#define SL_VISION_HISTOGRAM_H
+#include "sl_vision_image.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -11,7 +11,7 @@ extern "C" {
  * @param cdf The output cdf
  * @param hist_levels The number of histogram levels
  */
-void calculate_cdf(const size_t* hist, size_t* cdf, size_t hist_levels);
+void sl_vision_histogram_cdf(const size_t* hist, size_t* cdf, size_t hist_levels);
 
 /**
  * @brief Equalize the histogram of an image
@@ -19,8 +19,8 @@ void calculate_cdf(const size_t* hist, size_t* cdf, size_t hist_levels);
  * @param src_img
  * @param dst_img
  */
-void histogram_equalize(const struct Image* src_img, const struct Image* dst_img);
+void sl_vision_histogram_equalize(const sl_vision_image_t* src_img, const sl_vision_image_t* dst_img);
 #ifdef __cplusplus
 }
 #endif
-#endif /* HISTOGRAM_H */
+#endif // SL_VISION_HISTOGRAM_H

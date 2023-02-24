@@ -1,13 +1,13 @@
 #include "gtest/gtest.h"
-#include "image_utils.h"
-#include "histogram.h"
+#include "sl_vision_image.h"
+#include "sl_vision_histogram.h"
 
 TEST(FrontendTest, CalculateCDF) {
   const size_t hist[5] = { 1, 2, 3, 4, 5 };
   size_t cdf[5];
   size_t hist_levels = 5;
 
-  calculate_cdf(hist, cdf, hist_levels);
+  sl_vision_histogram_cdf(hist, cdf, hist_levels);
 
   EXPECT_EQ(cdf[0], 1);
   EXPECT_EQ(cdf[1], 3);
@@ -17,18 +17,18 @@ TEST(FrontendTest, CalculateCDF) {
 }
 TEST(FrontendTest, HistogramEqualize) {
   //Arrange
-  struct Image src_img;
-  generate_empty_image(&src_img, 3, 3, 1, IMAGEFORMAT_UINT8);
+  sl_vision_image_t src_img;
+  sl_vision_image_generate_empty(&src_img, 3, 3, 1, IMAGEFORMAT_UINT8);
   src_img.data.i[0] = 0;
   src_img.data.i[1] = 1;
   src_img.data.i[2] = 2;
   src_img.data.i[3] = 3;
 
-  struct Image dst_img;
-  generate_empty_image(&dst_img, 3, 3, 1, IMAGEFORMAT_UINT8);
+  sl_vision_image_t dst_img;
+  sl_vision_image_generate_empty(&dst_img, 3, 3, 1, IMAGEFORMAT_UINT8);
 
   //Act
-  histogram_equalize(&src_img, &dst_img);
+  sl_vision_histogram_equalize(&src_img, &dst_img);
 
   //Assert
   EXPECT_EQ(dst_img.data.i[0], 0);

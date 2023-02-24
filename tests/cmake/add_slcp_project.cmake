@@ -27,7 +27,7 @@ function(add_slcp_project slcp_path target_board gsdk_dir arm_gcc_dir)
         set(ENV "ARM_GCC_DIR" ${arm_gcc_dir})
     endif()
 
-    message(STATUS "Generating: ${target_name}")
+    message(STATUS "Configuring: generate ${target_name}")
 
     add_custom_command(
         OUTPUT ${build_dir}/${application_name}.Makefile

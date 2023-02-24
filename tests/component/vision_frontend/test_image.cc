@@ -1,19 +1,19 @@
 #include "gtest/gtest.h"
-#include "image_utils.h"
-#include "image_utils.hpp"
+#include "sl_vision.h"
+#include "sl_vision_image.hpp"
 
 TEST(FrontendTest, Clamp) {
   // Expect equality.
   EXPECT_EQ(7 * 6, 42);
-  EXPECT_EQ(clampf(10, 0, 5), 5);
+  EXPECT_EQ(sl_vision_clampf(10, 0, 5), 5);
 }
 TEST(FrontendTest, CenterCrop_uint8) {
   // Arrange
-  struct Image src_img;
-  generate_random_image(&src_img, 200, 200, 3, IMAGEFORMAT_UINT8);
+  sl_vision_image_t src_img;
+  sl_vision_image_generate_random(&src_img, 200, 200, 3, IMAGEFORMAT_UINT8);
 
-  struct Image dst_img;
-  generate_random_image(&dst_img, 200, 200, 3, IMAGEFORMAT_UINT8);
+  sl_vision_image_t dst_img;
+  sl_vision_image_generate_random(&dst_img, 200, 200, 3, IMAGEFORMAT_UINT8);
 
   size_t start_x = (src_img.width - dst_img.width) / 2;
   size_t start_y = (src_img.height - dst_img.height) / 2;
@@ -21,14 +21,14 @@ TEST(FrontendTest, CenterCrop_uint8) {
   size_t end_y = start_y + dst_img.height;
 
   // Act
-  center_crop(&src_img, &dst_img);
+  sl_vision_image_crop_center(&src_img, &dst_img);
 
   // Assert
   for (size_t x = start_x; x < end_x; x++) {
     for (size_t y = start_y; y < end_y; y++) {
       for (size_t z = 0; z < src_img.depth; z++) {
-        uint8_t src_val = _get_pixel_value<uint8_t>(&src_img, x, y, z);
-        uint8_t dst_val = _get_pixel_value<uint8_t>(&dst_img, x - start_x, y - start_y, z);
+        uint8_t src_val = cpp_sl_vision_image_pixel_get_value<uint8_t>(&src_img, x, y, z);
+        uint8_t dst_val = cpp_sl_vision_image_pixel_get_value<uint8_t>(&dst_img, x - start_x, y - start_y, z);
         EXPECT_EQ(src_val, dst_val);
       }
     }
@@ -36,11 +36,11 @@ TEST(FrontendTest, CenterCrop_uint8) {
 }
 TEST(FrontendTest, CenterCrop_float) {
   // Arrange
-  struct Image src_img;
-  generate_random_image(&src_img, 200, 200, 3, IMAGEFORMAT_FLOAT);
+  sl_vision_image_t src_img;
+  sl_vision_image_generate_random(&src_img, 200, 200, 3, IMAGEFORMAT_FLOAT);
 
-  struct Image dst_img;
-  generate_random_image(&dst_img, 100, 100, 3, IMAGEFORMAT_FLOAT);
+  sl_vision_image_t dst_img;
+  sl_vision_image_generate_random(&dst_img, 100, 100, 3, IMAGEFORMAT_FLOAT);
 
   size_t start_x = (src_img.width - dst_img.width) / 2;
   size_t start_y = (src_img.height - dst_img.height) / 2;
@@ -48,14 +48,14 @@ TEST(FrontendTest, CenterCrop_float) {
   size_t end_y = start_y + dst_img.height;
 
   // Act
-  center_crop(&src_img, &dst_img);
+  sl_vision_image_crop_center(&src_img, &dst_img);
 
   // Assert
   for (size_t x = start_x; x < end_x; x++) {
     for (size_t y = start_y; y < end_y; y++) {
       for (size_t z = 0; z < src_img.depth; z++) {
-        float src_val = _get_pixel_value<float>(&src_img, x, y, z);
-        float dst_val = _get_pixel_value<float>(&dst_img, x - start_x, y - start_y, z);
+        float src_val = cpp_sl_vision_image_pixel_get_value<float>(&src_img, x, y, z);
+        float dst_val = cpp_sl_vision_image_pixel_get_value<float>(&dst_img, x - start_x, y - start_y, z);
         EXPECT_EQ(src_val, dst_val);
       }
     }
@@ -63,7 +63,7 @@ TEST(FrontendTest, CenterCrop_float) {
 }
 TEST(FrontendTest, ConnectedPixels_float){
   //Arrange
-  struct Image src_img;
+  sl_vision_image_t src_img;
   src_img.width = 3;
   src_img.height = 3;
   src_img.depth = 1;
@@ -71,7 +71,7 @@ TEST(FrontendTest, ConnectedPixels_float){
   float src_img_data[9] = { 0, 0, 0, 0.9f, 0.9f, 0.9f, 0, 0, 0 };
   src_img.data.f = src_img_data;
 
-  struct Image dst_label_img;
+  sl_vision_image_t dst_label_img;
   dst_label_img.width = 3;
   dst_label_img.height = 3;
   dst_label_img.depth = 1;
@@ -80,10 +80,9 @@ TEST(FrontendTest, ConnectedPixels_float){
   dst_label_img.data.i = dst_label_img_data;
 
   //Act
-  uint32_t working_memory_len = src_img.width * src_img.height * src_img.depth;
-  struct queue_pixel_entry working_memory[working_memory_len];
+
   float threshold = 0.5f;
-  uint8_t num_labels = find_connected_pixels(&dst_label_img, &src_img, threshold, working_memory, working_memory_len);
+  uint8_t num_labels = sl_vision_image_connected_pixels(&dst_label_img, &src_img, threshold);
 
   //Assert
   EXPECT_EQ(num_labels, 1);
@@ -93,7 +92,7 @@ TEST(FrontendTest, ConnectedPixels_float){
 }
 TEST(FrontendTest, ConnectedPixels_uint8){
   //Arrange
-  struct Image src_img;
+  sl_vision_image_t src_img;
   src_img.width = 3;
   src_img.height = 3;
   src_img.depth = 1;
@@ -101,7 +100,7 @@ TEST(FrontendTest, ConnectedPixels_uint8){
   uint8_t src_img_data[9] = { 0, 0, 0, 2, 2, 2, 0, 0, 0 };
   src_img.data.i = src_img_data;
 
-  struct Image dst_label_img;
+  sl_vision_image_t dst_label_img;
   dst_label_img.width = 3;
   dst_label_img.height = 3;
   dst_label_img.depth = 1;
@@ -110,10 +109,8 @@ TEST(FrontendTest, ConnectedPixels_uint8){
   dst_label_img.data.i = dst_label_img_data;
 
   //Act
-  uint32_t working_memory_len = src_img.width * src_img.height * src_img.depth;
-  struct queue_pixel_entry working_memory[working_memory_len];
   float threshold = 1.4f;
-  uint8_t num_labels = find_connected_pixels(&dst_label_img, &src_img, threshold, working_memory, working_memory_len);
+  uint8_t num_labels = sl_vision_image_connected_pixels(&dst_label_img, &src_img, threshold);
   for (int i = 0; i < 9; i++) {
     printf("%d ", dst_label_img_data[i]);
   }

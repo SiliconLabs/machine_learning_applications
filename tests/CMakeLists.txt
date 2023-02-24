@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 project(machine_learning_applications_tests)
-
+# Coding standards require this
+add_compile_options(-Wall)
 # GoogleTest requires at least C++14
 set(CMAKE_CXX_STANDARD 14)
 
@@ -11,6 +12,9 @@ cmake_path(GET CMAKE_SOURCE_DIR PARENT_PATH SOURCE_DIR)
 
 include(cmake/import_googletest.cmake)
 include(cmake/add_slcp_project.cmake)
+include(cmake/install_extension.cmake)
 
-add_subdirectory(application)
+install_gsdk_extension(${GSDK_DIR})
+
 add_subdirectory(component)
+add_subdirectory(application)

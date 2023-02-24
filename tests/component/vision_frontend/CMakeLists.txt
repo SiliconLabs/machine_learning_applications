@@ -6,14 +6,14 @@ set(FRONTEND_DIR ${SOURCE_DIR}/component/vision_frontend)
 
 add_executable(
   ${target_name}
-  test_image_utils.cc
+  test_image.cc
   test_centroids.cc
   test_histogram.cc
   test_bboxes.cc
-  ${FRONTEND_DIR}/src/bboxes.cc
-  ${FRONTEND_DIR}/src/centroids.cc
-  ${FRONTEND_DIR}/src/histogram.cc
-  ${FRONTEND_DIR}/src/image_utils.cc
+  ${FRONTEND_DIR}/src/sl_vision_bbox.cc
+  ${FRONTEND_DIR}/src/sl_vision_centroid.cc
+  ${FRONTEND_DIR}/src/sl_vision_histogram.cc
+  ${FRONTEND_DIR}/src/sl_vision_image.cc
   # GSDK Dependency
   ${GSDK_DIR}/platform/common/src/sl_slist.c
 )
