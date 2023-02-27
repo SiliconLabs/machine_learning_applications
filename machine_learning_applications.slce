@@ -6,4 +6,4 @@ sdk:
   id: gecko_sdk
   version: "4.1.0"
 component_path:
-  - path: "component/vision_frontend"
+  - path: "component/vision"

@@ -15,7 +15,7 @@ function(install_gsdk_extension gsdk_dir)
     get_filename_component(repo_folder_name ${SOURCE_DIR} NAME)
 
     # Find and track all source files recursively, the CONFIGURE_DEPENDS flag ensures the file changes are checked during build
-    file(GLOB_RECURSE absolute_src_files CONFIGURE_DEPENDS ${SOURCE_DIR}/component/*)
+    file(GLOB_RECURSE absolute_src_files CONFIGURE_DEPENDS ${SOURCE_DIR}/component/* ${SOURCE_DIR}/*.slcc ${SOURCE_DIR}/*.slce )
     foreach(absolute_src_file ${absolute_src_files})
         # Convert from absolute to relative path
         file(RELATIVE_PATH relative_src_file ${SOURCE_DIR} ${absolute_src_file})
@@ -23,7 +23,6 @@ function(install_gsdk_extension gsdk_dir)
         list(APPEND relative_src_files ${relative_src_file})
         list(APPEND output_src_files "${gsdk_dir}/extension/${repo_folder_name}/${relative_src_file}")
     endforeach()
-
     # Copy the extension to the Gecko SDK directory
     add_custom_command(
         OUTPUT ${output_src_files}

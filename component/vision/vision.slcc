@@ -1,4 +1,4 @@
-id: vision_frontend
+id: vision
 label: "Vision"
 package: machine_learning
 description: Component that utilities for processing vision related information such as images, bounding boxes, and more.

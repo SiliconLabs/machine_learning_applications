@@ -45,7 +45,7 @@ size_t sl_vision_bbox_non_max_suppression(sl_vision_bbox_t bboxes[], size_t max_
     bboxes_out[num_kept_bboxes] = *best_bb;
     num_kept_bboxes++;
     to_check.pop_back();
-    // Iterate backwards so that we can safely remove elements, need to use int here (or do we?)
+    // Iterate backwards so that we can safely remove elements, need to use int here (or do we?) 
     for (int i = to_check.size() - 1; i >= 0; i--) {
       const sl_vision_bbox_t* bb = to_check.at(i);
       float iou = sl_vision_bbox_calculate_iou(best_bb, bb);
