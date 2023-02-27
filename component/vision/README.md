@@ -1,11 +1,10 @@
 # Vision Frontend
 
-The vision frontend is a SLC component that provides useful functions when working with images. It currently covers the following main areas:
+This is an SLC component that provides useful functions when working with images and deep learning. It currently covers the following main areas:
 
 - Bounding boxes
 - Histograms
-- Image Utilities
-  - Image struct representing an image, and on which all functions operate
+- Images (data structure, cropping, resizing, etc.)
 
 To use, assuming this extension is already installed, simply add the following into your `*.slcp` file:
 
@@ -15,14 +14,14 @@ sdk_extension:
     version: "1.0.0"
 component:
     # ... other components
-  - id: vision_frontend
+  - id: vision
     from: machine_learning_applications
 ```
 
-After generatic the project using SLC, you can include `vision_frontend.h` in your source code:
+After generatic the project using SLC, you can include `sl_vision.h` in your source code:
 
 ```c
-#include "vision_frontend.h"
+#include "sl_vision.h"
 
 // ... your code
 ```
