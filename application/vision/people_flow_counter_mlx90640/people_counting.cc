@@ -93,7 +93,7 @@ void people_counting_process(void)
 {
   // Obtain and preprocess the image
   mlx90640_get_image_array(raw_img.data.f);
-  //process_image(&model_input_img, &raw_img, process_func_normalize);
+  
   preprocess(&raw_img, &model_input_img);
   // Perform inference
   TfLiteStatus invoke_status = interpreter->Invoke();

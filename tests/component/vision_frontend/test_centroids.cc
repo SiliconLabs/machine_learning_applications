@@ -2,7 +2,7 @@
 #include "sl_vision_image.h"
 #include "sl_vision_centroid.h"
 
-TEST(FrontEndTest, FindCentroidsConnectedPixels) {
+TEST(FrontendTest, FindCentroidsConnectedPixels) {
   // Arrange
   sl_vision_image_t src_img;
   src_img.width = 4;
