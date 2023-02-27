@@ -1,7 +1,7 @@
 id: vision
 label: "Vision"
 package: machine_learning
-description: Component that utilities for processing vision related information such as images, bounding boxes, and more.
+description: Component with utilities for processing vision related information such as images, bounding boxes, and more.
 category: Machine Learning
 quality: experimental
 root_path: component/vision

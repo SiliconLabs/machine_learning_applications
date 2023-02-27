@@ -21,7 +21,6 @@ Feel free to open an issue if you have any questions or encounter problems, but 
       - [Simplicity Studio: Adding an external repository](#simplicity-studio-adding-an-external-repository)
       - [Simplicity Studio: Flashing prebuilt demos](#simplicity-studio-flashing-prebuilt-demos)
       - [Simplicity Studio: Generating, building and flashing an application](#simplicity-studio-generating-building-and-flashing-an-application)
-  - [Component Development](#component-development)
   - [Testing](#testing)
     - [Testing: Using build container](#testing-using-build-container)
     - [Testing: Using command line tools](#testing-using-command-line-tools)
@@ -246,14 +245,6 @@ Some applications in this repository include project templates which can be used
 6. Inside your project, you can then compile and run the code from the window context menu:
    - Click on `Project`→`Build Project` to compile the code
    - Click on `Run`→`Debug` and select your connected device to flash the compiled firmware onto your device
-
-## Component Development
-
-When developing components in this repo, you need to install this extension in an existing Gecko SDK. This can be done using the `install_extension.sh` script. The script takes in one argument, which is the path to the Gecko SDK you want to install the extension in:
-
-```sh
-./install_extension.sh /path/to/gecko_sdk
-```
 
 **You need to perform this step every time you make changes to the extension.**
 
