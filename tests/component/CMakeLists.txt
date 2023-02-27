@@ -1,3 +1,3 @@
 
 
-add_subdirectory(vision_frontend)
+add_subdirectory(vision)

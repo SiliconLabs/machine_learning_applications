@@ -1,10 +1,10 @@
 id: vision_frontend
-label: "Vision Frontend"
+label: "Vision"
 package: machine_learning
 description: Component that utilities for processing vision related information such as images, bounding boxes, and more.
 category: Machine Learning
 quality: experimental
-root_path: component/vision_frontend
+root_path: component/vision
 include:
   - path: inc
     file_list:
@@ -19,6 +19,6 @@ source:
   - path: src/sl_vision_centroid.cc
   - path: src/sl_vision_histogram.cc
 provides:
-  - name: vision_frontend
+  - name: vision
 requires:
   - name: slist

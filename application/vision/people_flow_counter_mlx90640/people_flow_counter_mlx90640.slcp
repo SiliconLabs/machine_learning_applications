@@ -42,7 +42,7 @@ component:
   - id: device_init_dpll
   - id: tensorflow_lite_micro
   - id: bt_fp_soc_default
-  - id: vision_frontend
+  - id: vision
     from: machine_learning_applications
 define:
   - name: DEBUG_EFM
