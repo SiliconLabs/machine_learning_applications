@@ -4,7 +4,7 @@
 
 #include <random>
 template <typename T>
-T cpp_sl_vision_image_pixel_get_value(const sl_vision_image_t *img, size_t x, size_t y, size_t z)
+T generic_sl_vision_image_pixel_get_value(const sl_vision_image_t *img, size_t x, size_t y, size_t z)
 {
   return ((T *)img->data.raw)[sl_vision_image_index(img, x, y, z)];
 }
@@ -19,7 +19,7 @@ T cpp_sl_vision_image_pixel_get_value(const sl_vision_image_t *img, size_t x, si
  * @param val
  */
 template <typename T>
-void cpp_sl_vision_image_pixel_set_value(const sl_vision_image_t *img, size_t x, size_t y, size_t z, T val)
+void generic_sl_vision_image_pixel_set_value(const sl_vision_image_t *img, size_t x, size_t y, size_t z, T val)
 {
   ((T *)img->data.raw)[sl_vision_image_index(img, x, y, z)] = val;
 }
@@ -34,7 +34,7 @@ void cpp_sl_vision_image_pixel_set_value(const sl_vision_image_t *img, size_t x,
    @return The blurred value of the pixel
  */
 template <typename T>
-T cpp_sl_vision_image_pixel_blur(const sl_vision_image_t *img, size_t x, size_t y, size_t z, size_t kernel_size)
+T generic_sl_vision_image_pixel_blur(const sl_vision_image_t *img, size_t x, size_t y, size_t z, size_t kernel_size)
 {
   size_t kernel_half_size = kernel_size / 2;
   size_t kernel_area = kernel_size * kernel_size;
@@ -51,7 +51,7 @@ T cpp_sl_vision_image_pixel_blur(const sl_vision_image_t *img, size_t x, size_t 
       if (i >= (int)img->width || j >= (int)img->height) {
         continue;
       }
-      T val = cpp_sl_vision_image_pixel_get_value<T>(img, i, j, z) / kernel_area;
+      T val = generic_sl_vision_image_pixel_get_value<T>(img, i, j, z) / kernel_area;
       sum += val;
       // Only happens when the sum overflows, so should never execute for float type
       // If it does execute for float, then output will be wrong...
@@ -70,7 +70,7 @@ T cpp_sl_vision_image_pixel_blur(const sl_vision_image_t *img, size_t x, size_t 
  * @param new_height The new height of the image
  */
 template<typename T>
-void cpp_sl_vision_image_crop_center(const sl_vision_image_t* src_img, const sl_vision_image_t* dst_img)
+void generic_sl_vision_image_crop_center(const sl_vision_image_t* src_img, const sl_vision_image_t* dst_img)
 {
   size_t new_width = dst_img->width;
   size_t new_height = dst_img->height;
@@ -81,8 +81,8 @@ void cpp_sl_vision_image_crop_center(const sl_vision_image_t* src_img, const sl_
   for (size_t x = start_x; x < end_x; x++) {
     for (size_t y = start_y; y < end_y; y++) {
       for (size_t z = 0; z < src_img->depth; z++) {
-        T val = cpp_sl_vision_image_pixel_get_value<T>(src_img, x, y, z);
-        cpp_sl_vision_image_pixel_set_value<T>(dst_img, x - start_x, y - start_y, z, val);
+        T val = generic_sl_vision_image_pixel_get_value<T>(src_img, x, y, z);
+        generic_sl_vision_image_pixel_set_value<T>(dst_img, x - start_x, y - start_y, z, val);
       }
     }
   }
@@ -93,7 +93,7 @@ struct queue_pixel_entry{
   int y;
 };
 template <typename T>
-uint8_t cpp_sl_vision_image_connected_pixels(const sl_vision_image_t *dst_label_img, const sl_vision_image_t *src_img, float threshold)
+uint8_t generic_sl_vision_image_connected_pixels(const sl_vision_image_t *dst_label_img, const sl_vision_image_t *src_img, float threshold)
 {
   static int dxs[] = { 0, 1, -1 };
   static int dys[] = { 0, 1, -1 };
@@ -106,14 +106,14 @@ uint8_t cpp_sl_vision_image_connected_pixels(const sl_vision_image_t *dst_label_
   uint8_t current_label = 0;
   for (size_t y = 0; y < src_img->height; y++) {
     for (size_t x = 0; x < src_img->width; x++) {
-      if (cpp_sl_vision_image_pixel_get_value<T>(src_img, x, y, 0) < threshold) {
+      if (generic_sl_vision_image_pixel_get_value<T>(src_img, x, y, 0) < threshold) {
         continue;
       }
-      if (cpp_sl_vision_image_pixel_get_value<uint8_t>(dst_label_img, x, y, 0) > 0) {
+      if (generic_sl_vision_image_pixel_get_value<uint8_t>(dst_label_img, x, y, 0) > 0) {
         continue;
       }
       current_label++;
-      cpp_sl_vision_image_pixel_set_value<uint8_t>(dst_label_img, x, y, 0, current_label);
+      generic_sl_vision_image_pixel_set_value<uint8_t>(dst_label_img, x, y, 0, current_label);
       working_memory[queue_ptr] = { .x = (int)x, .y = (int)y };
       sl_slist_push_back(&head, &working_memory[queue_ptr].node);
       queue_ptr++;
@@ -136,8 +136,8 @@ uint8_t cpp_sl_vision_image_connected_pixels(const sl_vision_image_t *dst_label_
             if (next_y < 0 || next_y >= (int)src_img->height) {
               continue;
             }
-            if (cpp_sl_vision_image_pixel_get_value<T>(src_img, next_x, next_y, 0) >= threshold && cpp_sl_vision_image_pixel_get_value<uint8_t>(dst_label_img, next_x, next_y, 0) == 0) {
-              cpp_sl_vision_image_pixel_set_value<uint8_t>(dst_label_img, next_x, next_y, 0, current_label);
+            if (generic_sl_vision_image_pixel_get_value<T>(src_img, next_x, next_y, 0) >= threshold && generic_sl_vision_image_pixel_get_value<uint8_t>(dst_label_img, next_x, next_y, 0) == 0) {
+              generic_sl_vision_image_pixel_set_value<uint8_t>(dst_label_img, next_x, next_y, 0, current_label);
               working_memory[queue_ptr] =  {   .x = next_x, .y = next_y };
               sl_slist_push_back(&head, &working_memory[queue_ptr].node);
               queue_ptr++;
@@ -158,7 +158,7 @@ uint8_t cpp_sl_vision_image_connected_pixels(const sl_vision_image_t *dst_label_
  * @param depth
  */
 template<typename T>
-void cpp_sl_vision_image_generate_random(sl_vision_image_t* out, size_t width, size_t height, size_t depth)
+void generic_sl_vision_image_generate_random(sl_vision_image_t* out, size_t width, size_t height, size_t depth)
 {
   out->width = width;
   out->height = height;
@@ -173,7 +173,7 @@ void cpp_sl_vision_image_generate_random(sl_vision_image_t* out, size_t width, s
   }
 }
 template<typename T>
-void cpp_sl_vision_image_generate_empty(sl_vision_image_t* out, size_t width, size_t height, size_t depth)
+void generic_sl_vision_image_generate_empty(sl_vision_image_t* out, size_t width, size_t height, size_t depth)
 {
   out->width = width;
   out->height = height;

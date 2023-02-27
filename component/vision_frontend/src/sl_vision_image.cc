@@ -23,10 +23,10 @@ void sl_vision_image_crop_center(const sl_vision_image_t* src_img, const sl_visi
 {
   switch (src_img->format) {
     case IMAGEFORMAT_UINT8:
-      cpp_sl_vision_image_crop_center<uint8_t>(src_img, dst_img);
+      generic_sl_vision_image_crop_center<uint8_t>(src_img, dst_img);
       break;
     case IMAGEFORMAT_FLOAT:
-      cpp_sl_vision_image_crop_center<float>(src_img, dst_img);
+      generic_sl_vision_image_crop_center<float>(src_img, dst_img);
       break;
     default:
       printf("Unsupported image format in file %s:%d!\n", __FILE__, __LINE__);
@@ -37,10 +37,10 @@ void sl_vision_image_generate_random(sl_vision_image_t* out, size_t width, size_
 {
   switch (format) {
     case IMAGEFORMAT_FLOAT:
-      cpp_sl_vision_image_generate_random<float>(out, width, height, depth);
+      generic_sl_vision_image_generate_random<float>(out, width, height, depth);
       break;
     case IMAGEFORMAT_UINT8:
-      cpp_sl_vision_image_generate_random<uint8_t>(out, width, height, depth);
+      generic_sl_vision_image_generate_random<uint8_t>(out, width, height, depth);
       break;
     default:
       printf("Unsupported image format in file %s:%d!\n", __FILE__, __LINE__);
@@ -52,10 +52,10 @@ void sl_vision_image_generate_empty(sl_vision_image_t* out, size_t width, size_t
 {
   switch (format) {
     case IMAGEFORMAT_FLOAT:
-      cpp_sl_vision_image_generate_empty<float>(out, width, height, depth);
+      generic_sl_vision_image_generate_empty<float>(out, width, height, depth);
       break;
     case IMAGEFORMAT_UINT8:
-      cpp_sl_vision_image_generate_empty<uint8_t>(out, width, height, depth);
+      generic_sl_vision_image_generate_empty<uint8_t>(out, width, height, depth);
       break;
     default:
       printf("Unsupported image format in file %s:%d!\n", __FILE__, __LINE__);
@@ -68,9 +68,9 @@ uint8_t sl_vision_image_connected_pixels(const sl_vision_image_t *dst_label_img,
 {
   switch (src_img->format) {
     case IMAGEFORMAT_FLOAT:
-      return cpp_sl_vision_image_connected_pixels<float>(dst_label_img, src_img, threshold);
+      return generic_sl_vision_image_connected_pixels<float>(dst_label_img, src_img, threshold);
     case IMAGEFORMAT_UINT8:
-      return cpp_sl_vision_image_connected_pixels<uint8_t>(dst_label_img, src_img, threshold);
+      return generic_sl_vision_image_connected_pixels<uint8_t>(dst_label_img, src_img, threshold);
     default:
       printf("Unsupported image format in file %s:%d!\n", __FILE__, __LINE__);
       exit(1);
@@ -83,10 +83,10 @@ void sl_vision_image_print(const sl_vision_image_t *img)
     for (size_t x = 0; x < img->width; x++) {
       switch (img->format) {
         case IMAGEFORMAT_UINT8:
-          printf("%i,", cpp_sl_vision_image_pixel_get_value<uint8_t>(img, x, y, 0));
+          printf("%i,", generic_sl_vision_image_pixel_get_value<uint8_t>(img, x, y, 0));
           break;
         case IMAGEFORMAT_FLOAT:
-          printf("%f,", cpp_sl_vision_image_pixel_get_value<float>(img, x, y, 0));
+          printf("%f,", generic_sl_vision_image_pixel_get_value<float>(img, x, y, 0));
           break;
         default:
           printf("Unsupported image format in file %s:%d!\n", __FILE__, __LINE__);

@@ -6,9 +6,9 @@ void sl_vision_centroid_from_connected_pixels(const sl_vision_image_t *label_img
 {
   switch (src_img->format) {
     case IMAGEFORMAT_FLOAT:
-      return cpp_sl_vision_centroid_from_connected_pixels<float>(label_img, src_img, centroids_out, num_labels);
+      return generic_sl_vision_centroid_from_connected_pixels<float>(label_img, src_img, centroids_out, num_labels);
     case IMAGEFORMAT_UINT8:
-      return cpp_sl_vision_centroid_from_connected_pixels<uint8_t>(label_img, src_img, centroids_out, num_labels);
+      return generic_sl_vision_centroid_from_connected_pixels<uint8_t>(label_img, src_img, centroids_out, num_labels);
   }
 }
 

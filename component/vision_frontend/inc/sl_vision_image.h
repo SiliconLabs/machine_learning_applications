@@ -66,7 +66,7 @@ void sl_vision_image_generate_empty(sl_vision_image_t* out, size_t width, size_t
  */
 uint8_t sl_vision_image_connected_pixels(const sl_vision_image_t *dst_label_img, const sl_vision_image_t *src_img, float threshold);
 #ifndef UNIT_TEST
-inline void sl_vision_image_export(const sl_vision_image_t *img, const char *title, const char *misc_info, sl_iostream_t *handle)
+__INLINE void sl_vision_image_export(const sl_vision_image_t *img, const char *title, const char *misc_info, sl_iostream_t *handle)
 {
   printf("image:%s,%d,%d,%d,%d,%s\n", title, img->width, img->height, img->depth, (int)img->format, misc_info);
   sl_iostream_write(handle, img->data.raw, img->width * img->height * img->depth * sl_vision_image_format_bytesize(img->format));

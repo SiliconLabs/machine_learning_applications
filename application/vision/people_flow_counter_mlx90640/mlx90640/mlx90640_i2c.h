@@ -36,8 +36,8 @@
  *
  ******************************************************************************/
 
-#ifndef MLX90640_MLX90640_I2C_H_
-#define MLX90640_MLX90640_I2C_H_
+#ifndef MLX90640_I2C_H
+#define MLX90640_I2C_H
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -88,4 +88,4 @@ void mlx90640_I2CFreqSet(int freq);
 #ifdef __cplusplus
 }
 #endif
-#endif /* MLX90640_MLX90640_I2C_H_ */
+#endif // MLX90640_I2C_H

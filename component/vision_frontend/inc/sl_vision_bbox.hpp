@@ -7,7 +7,7 @@
  *
  */
 template <typename T>
-void cpp_sl_vision_bbox_blur(const sl_vision_image_t* img, const sl_vision_bbox_t* bb, size_t kernel_size)
+void generic_sl_vision_bbox_blur(const sl_vision_image_t* img, const sl_vision_bbox_t* bb, size_t kernel_size)
 {
   size_t start_x = (size_t)bb->x;
   size_t start_y = (size_t)bb->y;
@@ -18,8 +18,8 @@ void cpp_sl_vision_bbox_blur(const sl_vision_image_t* img, const sl_vision_bbox_
     for (size_t y = start_y; y < end_y; y++) {
       for (size_t z = 0; z < img->depth; z++) {
         // Do a box blur and apply it to the image
-        T blur_value = cpp_sl_vision_image_pixel_blur<T>(img, x, y, z, kernel_size);
-        cpp_sl_vision_image_pixel_set_value<T>(img, x, y, z, blur_value);
+        T blur_value = generic_sl_vision_image_pixel_blur<T>(img, x, y, z, kernel_size);
+        generic_sl_vision_image_pixel_set_value<T>(img, x, y, z, blur_value);
       }
     }
   }
@@ -29,7 +29,7 @@ void cpp_sl_vision_bbox_blur(const sl_vision_image_t* img, const sl_vision_bbox_
  *
  */
 template <typename T>
-void cpp_sl_vision_bbox_pixelize(const sl_vision_image_t* img, const sl_vision_bbox_t* bb, size_t pixel_size)
+void generic_sl_vision_bbox_pixelize(const sl_vision_image_t* img, const sl_vision_bbox_t* bb, size_t pixel_size)
 {
   size_t start_x = (size_t)bb->x;
   size_t start_y = (size_t)bb->y;
@@ -40,10 +40,10 @@ void cpp_sl_vision_bbox_pixelize(const sl_vision_image_t* img, const sl_vision_b
     for (size_t y = start_y; y < end_y; y += pixel_size) {
       for (size_t z = 0; z < img->depth; z++) {
         // Get the average pixel value of the pixelized area
-        T pixel_value = cpp_sl_vision_image_pixel_get_value<T>(img, x, y, z);
+        T pixel_value = generic_sl_vision_image_pixel_get_value<T>(img, x, y, z);
         for (size_t i = 0; i < pixel_size; i++) {
           for (size_t j = 0; j < pixel_size; j++) {
-            cpp_sl_vision_image_pixel_set_value<T>(img, x + i, y + j, z, pixel_value);
+            generic_sl_vision_image_pixel_set_value<T>(img, x + i, y + j, z, pixel_value);
           }
         }
       }

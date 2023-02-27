@@ -61,10 +61,10 @@ void sl_vision_bbox_blur(const sl_vision_image_t* img, const sl_vision_bbox_t* b
 {
   switch (img->format) {
     case IMAGEFORMAT_UINT8:
-      cpp_sl_vision_bbox_blur<uint8_t>(img, bb, kernel_size);
+      generic_sl_vision_bbox_blur<uint8_t>(img, bb, kernel_size);
       break;
     case IMAGEFORMAT_FLOAT:
-      cpp_sl_vision_bbox_blur<float>(img, bb, kernel_size);
+      generic_sl_vision_bbox_blur<float>(img, bb, kernel_size);
       break;
     default:
       printf("Unsupported image format in file %s:%d!\n", __FILE__, __LINE__);
@@ -76,10 +76,10 @@ void sl_vision_bbox_pixelize(const sl_vision_image_t* img, const sl_vision_bbox_
 {
   switch (img->format) {
     case IMAGEFORMAT_UINT8:
-      cpp_sl_vision_bbox_pixelize<uint8_t>(img, bb, pixel_size);
+      generic_sl_vision_bbox_pixelize<uint8_t>(img, bb, pixel_size);
       break;
     case IMAGEFORMAT_FLOAT:
-      cpp_sl_vision_bbox_pixelize<float>(img, bb, pixel_size);
+      generic_sl_vision_bbox_pixelize<float>(img, bb, pixel_size);
       break;
     default:
       printf("Unsupported image format in file %s:%d!\n", __FILE__, __LINE__);

@@ -14,21 +14,26 @@ function(install_gsdk_extension gsdk_dir)
     # Get the name of the repo folder
     get_filename_component(repo_folder_name ${SOURCE_DIR} NAME)
 
-    # Create a custom target to install the extension every time we build
-    add_custom_target("install_extension" ALL)
+    # Find and track all source files recursively, the CONFIGURE_DEPENDS flag ensures the file changes are checked during build
+    file(GLOB_RECURSE absolute_src_files CONFIGURE_DEPENDS ${SOURCE_DIR}/component/*)
+    foreach(absolute_src_file ${absolute_src_files})
+        # Convert from absolute to relative path
+        file(RELATIVE_PATH relative_src_file ${SOURCE_DIR} ${absolute_src_file})
+        # Add the file to the list of dependencies
+        list(APPEND relative_src_files ${relative_src_file})
+        list(APPEND output_src_files "${gsdk_dir}/extension/${repo_folder_name}/${relative_src_file}")
+    endforeach()
 
     # Copy the extension to the Gecko SDK directory
     add_custom_command(
-        TARGET install_extension
+        OUTPUT ${output_src_files}
+        DEPENDS ${absolute_src_files}
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${SOURCE_DIR} ${gsdk_dir}/extension/${repo_folder_name}
-        COMMENT "Copying extension ${SOURCE_DIR} to ${gsdk_dir}/extension"
+        COMMAND slc signature trust -extpath ${gsdk_dir}/extension/${repo_folder_name} --sdk ${gsdk_dir}
+        COMMENT "Installing extension to ${gsdk_dir}"
     )
 
-    # Trust the extension using SLC
-    add_custom_command(
-        TARGET install_extension
-        COMMAND slc signature trust -extpath ${gsdk_dir}/extension/${repo_folder_name} --sdk ${gsdk_dir}
-        COMMENT "Trusting extension using SLC"
-    )
+    add_custom_target(install_gsdk_extension ALL DEPENDS ${output_src_files})
+
 
 endfunction()

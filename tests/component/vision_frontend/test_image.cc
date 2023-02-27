@@ -27,8 +27,8 @@ TEST(FrontendTest, CenterCrop_uint8) {
   for (size_t x = start_x; x < end_x; x++) {
     for (size_t y = start_y; y < end_y; y++) {
       for (size_t z = 0; z < src_img.depth; z++) {
-        uint8_t src_val = cpp_sl_vision_image_pixel_get_value<uint8_t>(&src_img, x, y, z);
-        uint8_t dst_val = cpp_sl_vision_image_pixel_get_value<uint8_t>(&dst_img, x - start_x, y - start_y, z);
+        uint8_t src_val = generic_sl_vision_image_pixel_get_value<uint8_t>(&src_img, x, y, z);
+        uint8_t dst_val = generic_sl_vision_image_pixel_get_value<uint8_t>(&dst_img, x - start_x, y - start_y, z);
         EXPECT_EQ(src_val, dst_val);
       }
     }
@@ -54,8 +54,8 @@ TEST(FrontendTest, CenterCrop_float) {
   for (size_t x = start_x; x < end_x; x++) {
     for (size_t y = start_y; y < end_y; y++) {
       for (size_t z = 0; z < src_img.depth; z++) {
-        float src_val = cpp_sl_vision_image_pixel_get_value<float>(&src_img, x, y, z);
-        float dst_val = cpp_sl_vision_image_pixel_get_value<float>(&dst_img, x - start_x, y - start_y, z);
+        float src_val = generic_sl_vision_image_pixel_get_value<float>(&src_img, x, y, z);
+        float dst_val = generic_sl_vision_image_pixel_get_value<float>(&dst_img, x - start_x, y - start_y, z);
         EXPECT_EQ(src_val, dst_val);
       }
     }
