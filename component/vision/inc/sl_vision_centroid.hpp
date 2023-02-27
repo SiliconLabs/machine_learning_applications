@@ -1,10 +1,10 @@
-#ifndef CENTROIDS_HPP
-#define CENTROIDS_HPP
+#ifndef SL_VISION_CENTROID_HPP
+#define SL_VISION_CENTROID_HPP
 
-#include "image_utils.h"
+#include "sl_vision_image.h"
 
 template <typename T>
-void _find_centroids_connected_pixels(const struct Image *label_img, const struct Image *src_img, struct centroid centroids_out[], uint8_t num_labels)
+void generic_sl_vision_centroid_from_connected_pixels(const sl_vision_image_t *label_img, const sl_vision_image_t *src_img, sl_vision_centroid_t centroids_out[], uint8_t num_labels)
 {
   uint16_t counts[num_labels];
   float x_vals[num_labels];
@@ -16,12 +16,11 @@ void _find_centroids_connected_pixels(const struct Image *label_img, const struc
 
   for (size_t y = 0; y < label_img->height; y++) {
     for (size_t x = 0; x < label_img->width; x++) {
-      uint8_t label = _get_pixel_value<uint8_t>(label_img, x, y, 0);
+      uint8_t label = generic_sl_vision_image_pixel_get_value<uint8_t>(label_img, x, y, 0);
       if (label == 0) {
         continue;
       }
       counts[label - 1]++;
-      T val = _get_pixel_value<T>(src_img, x, y, 0);
       // Sum the coordinates of a label
       x_vals[label - 1] += ((float)x + 0.5f);
       y_vals[label - 1] += ((float)y + 0.5f);
@@ -34,4 +33,4 @@ void _find_centroids_connected_pixels(const struct Image *label_img, const struc
     centroids_out[label_id].count = counts[label_id];
   }
 }
-#endif /* CENTROIDS_HPP */
+#endif // SL_VISION_CENTROID_HPP

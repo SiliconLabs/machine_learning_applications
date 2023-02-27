@@ -1,16 +1,9 @@
-#include "histogram.h"
-#include "image_utils.hpp"
+#include "sl_vision_histogram.h"
+#include "sl_vision_image.hpp"
 
 #define HIST_LEVELS 256
 
-/**
- * @brief Calculate the cumulative distribution function of a histogram
- *
- * @param hist The histogram
- * @param cdf The output cdf
- * @param hist_levels The number of histogram levels
- */
-void calculate_cdf(const size_t* hist, size_t* cdf, size_t hist_levels)
+void sl_vision_histogram_cdf(const size_t* hist, size_t* cdf, size_t hist_levels)
 {
   cdf[0] = hist[0];
   for (size_t i = 1; i < hist_levels; i++) {
@@ -18,13 +11,7 @@ void calculate_cdf(const size_t* hist, size_t* cdf, size_t hist_levels)
   }
 }
 
-/**
- * @brief Equalize the histogram of an image
- *
- * @param src_img
- * @param dst_img
- */
-void histogram_equalize(const struct Image* src_img, const struct Image* dst_img)
+void sl_vision_histogram_equalize(const sl_vision_image_t* src_img, const sl_vision_image_t* dst_img)
 {
   if (src_img->format != IMAGEFORMAT_UINT8) {
     printf("Only uint8 is supported!\n");
@@ -47,8 +34,7 @@ void histogram_equalize(const struct Image* src_img, const struct Image* dst_img
   }
 
   // Calculate CDF of histogram
-  calculate_cdf(hist, cdf, HIST_LEVELS);
-  size_t cdf_max = cdf[HIST_LEVELS - 1];
+  sl_vision_histogram_cdf(hist, cdf, HIST_LEVELS);
   size_t cdf_min = cdf[0];
 
   // Calculate transformed intensity values

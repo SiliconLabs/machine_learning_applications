@@ -1,19 +1,19 @@
 set(target_name gtest_vision_frontend)
-set(build_dir ${CMAKE_BINARY_DIR}/component/vision/frontend)
+set(build_dir ${CMAKE_BINARY_DIR}/component/vision)
 set(gsdk_flag "-s" "${GSDK_DIR}")
 set(gsdk_print_flag "-s ${GSDK_DIR}")
-set(FRONTEND_DIR ${SOURCE_DIR}/component/vision_frontend)
+set(COMPONENT_DIR ${SOURCE_DIR}/component/vision)
 
 add_executable(
   ${target_name}
-  test_image_utils.cc
+  test_image.cc
   test_centroids.cc
   test_histogram.cc
   test_bboxes.cc
-  ${FRONTEND_DIR}/src/bboxes.cc
-  ${FRONTEND_DIR}/src/centroids.cc
-  ${FRONTEND_DIR}/src/histogram.cc
-  ${FRONTEND_DIR}/src/image_utils.cc
+  ${COMPONENT_DIR}/src/sl_vision_bbox.cc
+  ${COMPONENT_DIR}/src/sl_vision_centroid.cc
+  ${COMPONENT_DIR}/src/sl_vision_histogram.cc
+  ${COMPONENT_DIR}/src/sl_vision_image.cc
   # GSDK Dependency
   ${GSDK_DIR}/platform/common/src/sl_slist.c
 )
@@ -23,7 +23,7 @@ target_include_directories(
   PUBLIC
 
   ${GSDK_DIR}/platform/common/inc
-  ${FRONTEND_DIR}/inc
+  ${COMPONENT_DIR}/inc
 )
 
 target_compile_definitions(${target_name} PUBLIC UNIT_TEST)

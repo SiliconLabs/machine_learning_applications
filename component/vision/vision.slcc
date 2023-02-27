@@ -1,0 +1,24 @@
+id: vision
+label: "Vision"
+package: machine_learning
+description: Component that utilities for processing vision related information such as images, bounding boxes, and more.
+category: Machine Learning
+quality: experimental
+root_path: component/vision
+include:
+  - path: inc
+    file_list:
+      - path: sl_vision_image.h
+      - path: sl_vision_histogram.h
+      - path: sl_vision_bbox.h
+      - path: sl_vision_centroid.h
+      - path: sl_vision.h
+source:
+  - path: src/sl_vision_image.cc
+  - path: src/sl_vision_bbox.cc
+  - path: src/sl_vision_centroid.cc
+  - path: src/sl_vision_histogram.cc
+provides:
+  - name: vision
+requires:
+  - name: slist

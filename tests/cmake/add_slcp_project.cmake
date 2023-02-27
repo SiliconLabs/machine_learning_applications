@@ -27,7 +27,16 @@ function(add_slcp_project slcp_path target_board gsdk_dir arm_gcc_dir)
         set(ENV "ARM_GCC_DIR" ${arm_gcc_dir})
     endif()
 
-    message(STATUS "Generating: ${target_name}")
+    message(STATUS "Configuring: generate ${target_name} ${application_dir}")
+
+    # Find and track all source files recursively, the CONFIGURE_DEPENDS flag ensures the file changes are checked during build
+    file(GLOB_RECURSE absolute_src_files CONFIGURE_DEPENDS ${application_dir})
+    foreach(absolute_src_file ${absolute_src_files})
+        # Convert from absolute to relative path
+        file(RELATIVE_PATH relative_src_file ${SOURCE_DIR} ${absolute_src_file})
+        # Add the file to the list of dependencies
+        list(APPEND relative_src_files ${relative_src_file})
+    endforeach()
 
     add_custom_command(
         OUTPUT ${build_dir}/${application_name}.Makefile
@@ -38,7 +47,7 @@ function(add_slcp_project slcp_path target_board gsdk_dir arm_gcc_dir)
 
     add_custom_command(
         OUTPUT ${build_dir}/build/debug/${application_name}.out
-        DEPENDS ${build_dir}/${application_name}.Makefile ${SOURCE_DIR}/${application_dir}/*
+        DEPENDS ${build_dir}/${application_name}.Makefile ${absolute_src_files}
         COMMAND make -f ${application_name}.Makefile -j BUILD_DIR=${build_dir}/build/
         COMMENT "make -f ${application_name}.Makefile -j BUILD_DIR=${build_dir}/build/"
         WORKING_DIRECTORY ${build_dir}
