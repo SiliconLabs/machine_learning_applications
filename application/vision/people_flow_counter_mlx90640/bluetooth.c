@@ -13,8 +13,13 @@ void assert_status(sl_status_t sc)
 }
 void start_advertising()
 {
-  // Start advertising and enable connections.
   sl_status_t sc;
+  // Generate data for advertising
+  sc = sl_bt_legacy_advertiser_generate_data(advertising_set_handle,
+                                             sl_bt_advertiser_general_discoverable);
+  assert_status(sc);
+  // Start advertising and enable connections.
+
   sc = sl_bt_legacy_advertiser_start(advertising_set_handle,
                                      sl_bt_advertiser_connectable_scannable);
   assert_status(sc);
@@ -71,18 +76,11 @@ void sl_bt_on_event(sl_bt_msg_t *evt)
                    address.addr[1],
                    address.addr[0]);
 
-      sc = sl_bt_sm_set_bondable_mode(1);
-      assert_status(sc);
-      // Deleting bondings at boot solves a lot of issues
-      //sc = sl_bt_sm_delete_bondings();
+      // Disable bonding for easy of use.
+      sc = sl_bt_sm_set_bondable_mode(0);
       assert_status(sc);
       // Create an advertising set.
       sc = sl_bt_advertiser_create_set(&advertising_set_handle);
-      assert_status(sc);
-
-      // Generate data for advertising
-      sc = sl_bt_legacy_advertiser_generate_data(advertising_set_handle,
-                                                 sl_bt_advertiser_general_discoverable);
       assert_status(sc);
 
       // Set advertising interval to 100ms.
@@ -116,8 +114,6 @@ void sl_bt_on_event(sl_bt_msg_t *evt)
       break;
     case sl_bt_evt_sm_bonding_failed_id:
       app_log("Bonding failed: 0x%04X\n", evt->data.evt_sm_bonding_failed.reason);
-      sc = sl_bt_sm_delete_bondings();
-      assert_status(sc);
       break;
     case sl_bt_evt_gatt_server_characteristic_status_id:
       app_log_info("Characteristic was attempted changed: %d\n", evt->data.evt_gatt_server_characteristic_status.characteristic);
@@ -135,35 +131,22 @@ void sl_bt_on_event(sl_bt_msg_t *evt)
         }
       }
       break;
-    ///////////////////////////////////////////////////////////////////////////
-    // Add additional event handlers here as your application requires!      //
-    ///////////////////////////////////////////////////////////////////////////
-    // case  sl_bt_evt_system_external_signal_id:
-    // if ((notification_enabled == 1) && (connection_handle != 0xff)) {
-    //   memset(input_report_data, 0, sizeof(input_report_data));
-    //   input_report_data[0] = 0x02; // Consumer report code for media, 0x01 is for vanilla keyboard report
-    //   input_report_data[1] = current_key;
-    //   sc = sl_bt_gatt_server_send_notification(connection_handle, gattdb_report, 2, input_report_data);
-
-    //   app_assert_status(sc);
-    //   app_log_info("Key report was sent: ");
-    //   for (uint8_t i = 0; i < sizeof(input_report_data); i++) {
-    //     app_log("%02X", input_report_data[i]);
-    //   }
-    //   app_log("\n");
-    // }
-    // app_assert_status(sc);
-    // break;
-    // -------------------------------
-    // Default event handler.
     default:
       app_log("0x%08X\n", SL_BT_MSG_ID(evt->header));
       break;
   }
 }
 #define PACKET_SIZE  242
+// The packet buffer is used to store the data to be sent.
 static uint8_t packet[PACKET_SIZE];
+// The remaining_packet variable is used to keep track of how much capacity is left in the packet.
 static size_t remaining_packet = PACKET_SIZE;
+/**
+ * @brief Adds data to the packet and sends it when the packet is full.
+ *
+ * @param buf_ptr
+ * @param len
+ */
 void data_notify(void* buf_ptr, size_t len)
 {
   if (connection_handle == 0xff || notification_enabled == 0) {
@@ -172,6 +155,7 @@ void data_notify(void* buf_ptr, size_t len)
   sl_status_t sc;
   size_t remaining_len = len;
   while (remaining_len > 0) {
+    printf("remaining_len: %d", remaining_len);
     size_t len_to_send = remaining_packet;
     if (remaining_len <= len_to_send) {
       len_to_send = remaining_len;

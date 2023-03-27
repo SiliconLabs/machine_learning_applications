@@ -17,7 +17,7 @@ class Writer(io.IOBase):
 
 def create_handler(buf: io.BytesIO):
     def handle_data(sender, data: bytearray):
-        len = tty_file.write(data)
+        tty_file.write(data)
 
     return handle_data
 
