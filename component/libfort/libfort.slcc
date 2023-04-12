@@ -1,0 +1,13 @@
+id: libfort
+label: "libfort (Library to create FORmatted Tables)"
+package: misc
+description: Library for printing formatted tables
+category: Misc.
+quality: experimental
+root_path: component/libfort
+include:
+  - path: ./
+source:
+  - path: fort.c
+provides:
+  - name: libfort

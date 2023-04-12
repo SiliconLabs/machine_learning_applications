@@ -1,0 +1,25 @@
+id: htm
+label: "Hierarchical Temporal Memory"
+package: machine_learning
+description: Implementation of HTM for anomaly detection in low-dimensional data.
+category: Machine Learning
+quality: experimental
+root_path: component/htm
+include:
+  - path: inc
+source:
+  - path: src/sl_htm_encoder.c
+  - path: src/sl_htm_sdr.c
+  - path: src/sl_htm_sp.c
+  - path: src/sl_htm_tm_cell.c
+  - path: src/sl_htm_tm_column.c
+  - path: src/sl_htm_tm_segment.c
+  - path: src/sl_htm_tm_synapse.c
+  - path: src/sl_htm_tm_types.c
+  - path: src/sl_htm_tm.c
+  - path: src/sl_htm.c
+  - path: src/sl_htm_utils.c
+provides:
+  - name: htm
+requires:
+  - name: libfort

@@ -1,0 +1,60 @@
+project_name: imu_anomaly_detection
+package: platform
+quality: internal
+label: Machine Learning - IMU Anomaly Detection
+description: >
+  A demo displaying how anomaly detection can be used
+category: Example|Machine Learning
+source:
+  - path: app.c
+  - path: main.c
+  - path: accelerometer.c
+include:
+  - path: .
+    file_list:
+      - path: app.h
+      - path: accelerometer.h
+sdk_extension:
+  - id: machine_learning_applications
+    version: "1.0.0"
+component:
+  - id: sl_system
+  - id: device_init
+  - id: sleeptimer
+  - id: imu_driver
+  - id: simple_led
+    instance: [led0, led1]
+  - id: iostream_recommended_stream
+  - id: iostream_eusart
+    instance: [vcom]
+  - id: iostream_retarget_stdio
+  - id: component_catalog
+  - id: gpiointerrupt
+  - id: emlib_timer
+  - id: app_assert
+  - id: app_log
+  - id: device_init_dpll
+  - id: htm
+    from: machine_learning_applications
+define:
+  - name: DEBUG_EFM
+configuration:
+  - name: SL_BOARD_ENABLE_VCOM
+    value: 1
+  - name: SL_BOARD_ENABLE_SENSOR_IMU
+    value: "1"
+  - name: SL_STACK_SIZE
+    value: "200000"
+
+toolchain_settings:
+  - option: gcc_compiler_option
+    value: "-Wno-unused-parameter"
+  - option: gcc_compiler_option
+    value: "-Wno-missing-field-initializers"
+  - option: gcc_linker_option
+    value: "-u _printf_float"
+tag:
+  - hardware:component:led:2+
+  - hardware:component:imu
+  - hardware:device:ram:40
+  - hardware:device:flash:100

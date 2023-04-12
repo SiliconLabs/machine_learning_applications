@@ -18,7 +18,7 @@ component:
     from: machine_learning_applications
 ```
 
-After generatic the project using SLC, you can include `sl_vision.h` in your source code:
+After generating the project using SLC, you can include `sl_vision.h` in your source code:
 
 ```c
 #include "sl_vision.h"

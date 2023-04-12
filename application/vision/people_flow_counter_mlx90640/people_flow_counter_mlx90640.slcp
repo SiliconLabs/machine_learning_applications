@@ -4,7 +4,7 @@ quality: internal
 label: Machine Learning - People Flow Counter
 description: >
   A demo displaying how xG24-DK2601B can be used to to gain information about people flow using an IR camera.
-category: Example|Platform
+category: Example|Machine Learning
 source:
   - path: app.c
   - path: main.c
