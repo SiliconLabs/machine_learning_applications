@@ -41,4 +41,32 @@
     <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
     <properties key="filters" value="Capability|Machine\ Learning Device\ Type|SoC MCU|32-bit\ MCU Project\ Difficulty|Advanced"/>
   </descriptors>
+  <descriptors name="ble_magic_wand" label="Machine Learning - BLE Magic Wand" description="A demo of how xG24-DK2601B can be used for creating a simple gesture controlled BLE HID keyboard. &#xA;">
+    <properties key="namespace" value="template.uc"/>
+    <properties key="keywords" value="universal\ configurator"/>
+    <properties key="projectFilePaths" value="application/imu/ble_magic_wand/ble_magic_wand.slcp"/>
+    <properties key="readmeFiles" value="application/imu/ble_magic_wand/README.md"/>
+    <properties key="boardCompatibility" value="brd2601b"/>
+    <properties key="partCompatibility" value=".*efr32mg24.*"/>
+    <properties key="ideCompatibility" value="iar-embedded-workbench makefile-ide segger-embedded-studio simplicity-ide"/>
+    <properties key="toolchainCompatibility" value="gcc iar segger"/>
+    <properties key="category" value="Example|Machine Learning"/>
+    <properties key="quality" value="EXPERIMENTAL"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value="Capability|Machine\ Learning Device\ Type|SoC MCU|32-bit\ MCU Project\ Difficulty|Advanced"/>
+  </descriptors>
+  <descriptors name="imu_anomaly_detection" label="Machine Learning - IMU Anomaly Detection" description="A demo of how xG24-DK2601B can be used for anomaly detection in a changing environment, such as predictive maintenance. &#xA;">
+    <properties key="namespace" value="template.uc"/>
+    <properties key="keywords" value="universal\ configurator"/>
+    <properties key="projectFilePaths" value="application/imu/imu_anomaly_detection/imu_anomaly_detection.slcp"/>
+    <properties key="readmeFiles" value="application/imu/imu_anomaly_detection/README.md"/>
+    <properties key="boardCompatibility" value="brd2601b"/>
+    <properties key="partCompatibility" value=".*efr32mg24.*"/>
+    <properties key="ideCompatibility" value="iar-embedded-workbench makefile-ide segger-embedded-studio simplicity-ide"/>
+    <properties key="toolchainCompatibility" value="gcc iar segger"/>
+    <properties key="category" value="Example|Machine Learning"/>
+    <properties key="quality" value="EXPERIMENTAL"/>
+    <properties key="stockConfigCompatibility" value="com.silabs.ss.framework.project.toolchain.core.default"/>
+    <properties key="filters" value="Capability|Machine\ Learning Device\ Type|SoC MCU|32-bit\ MCU Project\ Difficulty|Advanced"/>
+  </descriptors>
 </model:MDescriptors>

@@ -3,7 +3,7 @@ package: platform
 quality: internal
 label: Machine Learning - IMU Anomaly Detection
 description: >
-  A demo displaying how anomaly detection can be used
+  A demo showcasing online-learning anomaly detection using an IMU sensor.
 category: Example|Machine Learning
 source:
   - path: app.c
@@ -53,8 +53,3 @@ toolchain_settings:
     value: "-Wno-missing-field-initializers"
   - option: gcc_linker_option
     value: "-u _printf_float"
-tag:
-  - hardware:component:led:2+
-  - hardware:component:imu
-  - hardware:device:ram:40
-  - hardware:device:flash:100
