@@ -49,12 +49,16 @@ async def main():
 
     port_id = input("Select BLE device to connect to: ")
     port_id = int(port_id)
-    device = devices[port_id]
-    client = BleakClient(device)
-    try:
-        await run(client)
-    except KeyboardInterrupt:
-        await client.disconnect()
+    
+    
+    while(True):
+        try:
+            device = devices[port_id]
+            client = BleakClient(device)
+            await run(client)
+        except Exception as inst:
+            print("Retrying....")
+            await client.disconnect()
 
 
 if __name__ == "__main__":
