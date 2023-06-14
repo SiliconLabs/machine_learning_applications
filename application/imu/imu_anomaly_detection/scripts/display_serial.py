@@ -2,6 +2,7 @@ import argparse
 import serial
 import serial.tools.list_ports
 import matplotlib.pyplot as plt
+import os
 def display(ser):
     buffer_len = 50
     buffer = [0]*buffer_len
@@ -40,7 +41,10 @@ if __name__ == "__main__":
         print(p.name)
     port_id = input("Select port to connect to: ")
     port_id = int(port_id)
-    ser = serial.Serial(port="/dev/" + ports[port_id].name)
+    prefix = ""
+    if(os.name == "posix"):
+        prefix = "/dev/"
+    ser = serial.Serial(port=prefix + ports[port_id].name)
 
     
     display(ser)
